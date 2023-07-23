@@ -17,8 +17,9 @@ return new class extends Migration
             $table->string('genre',255)->nullable();
             $table->integer('duration')->nullable();
             $table->string('actors')->nullable();
-            $table->string('director',255)->nullable();
+            $table->text('director')->nullable();
             $table->text('content')->nullable();
+            $table->text('posters')->nullable();
             $table->boolean('status')->nullable()->default(1);;
             $table->timestamps();
         });

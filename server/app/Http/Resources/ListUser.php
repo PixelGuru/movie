@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+
 class ListUser extends JsonResource
 {
     /**
@@ -25,15 +26,23 @@ class ListUser extends JsonResource
         ];
         $roleText = isset($roles[$this->role]) ? $roles[$this->role] : 'N/A';
 
+        $genders = [
+            0 => 'Nam',
+            1 => 'Nữ',
+            2 => 'Khác',
+
+        ];
+        $genderText = isset($genders[$this->gender]) ? $genders[$this->gender] : 'N/A';
+
    
         
-        $birthdayDate = Carbon::createFromFormat('Y-m-d', $this->birthday);
+        $birthdayDate = Carbon::createFromFormat('Y-m-d', $this->birthday)->format('d/m/Y');
 
         return [
             'id'=>$this->id, 
             'name' => $this->name,
-            'gender' => $this->gender,
-            'birthday' => $birthdayDate->format('d/m/Y'), 
+            'gender' => $genderText,
+            'birthday' =>   $birthdayDate, 
             'email' => $this->email,
             'password' => $this->password,
             'phone' => $this->phone,

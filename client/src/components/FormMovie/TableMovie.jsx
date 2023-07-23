@@ -1,36 +1,18 @@
-import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Space, Table } from 'antd';
-import { useRef, useState } from 'react';
-import Highlighter from 'react-highlight-words';
-const data = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-  },
-  {
-    key: '2',
-    name: 'Joe Black',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-  },
-  {
-    key: '3',
-    name: 'Jim Green',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-  },
-  {
-    key: '4',
-    name: 'Jim Red',
-    age: 32,
-    address: 'London No. 2 Lake Park',
-  },
-];
-const TableMovie = () => {
-  const [searchText, setSearchText] = useState('');
-  const [searchedColumn, setSearchedColumn] = useState('');
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import { SearchOutlined } from "@ant-design/icons";
+import { Button, Input, Popconfirm, Space, Table } from "antd";
+import { useRef, useState } from "react";
+import Highlighter from "react-highlight-words";
+import { Image } from "./styled";
+import { Link } from "react-router-dom";
+import { styled } from "styled-components";
+
+const TableMovie = ({ dataSource, onDelete, onEdit }) => {
+  const [filteredInfo, setFilteredInfo] = useState({});
+  const [sortedInfo, setSortedInfo] = useState({});
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState("");
   const searchInput = useRef(null);
   const handleSearch = (selectedKeys, confirm, dataIndex) => {
     confirm();
@@ -39,10 +21,22 @@ const TableMovie = () => {
   };
   const handleReset = (clearFilters) => {
     clearFilters();
-    setSearchText('');
+    setSearchText("");
+  };
+
+  const handleChange = (pagination, filters, sorter) => {
+    console.log("Various parameters", pagination, filters, sorter);
+    setFilteredInfo(filters);
+    setSortedInfo(sorter);
   };
   const getColumnSearchProps = (dataIndex) => ({
-    filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
       <div
         style={{
           padding: 8,
@@ -53,11 +47,13 @@ const TableMovie = () => {
           ref={searchInput}
           placeholder={`Search ${dataIndex}`}
           value={selectedKeys[0]}
-          onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
           onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
           style={{
             marginBottom: 8,
-            display: 'block',
+            display: "block",
           }}
         />
         <Space>
@@ -109,7 +105,7 @@ const TableMovie = () => {
     filterIcon: (filtered) => (
       <SearchOutlined
         style={{
-          color: filtered ? '#1677ff' : undefined,
+          color: filtered ? "#1677ff" : undefined,
         }}
       />
     ),
@@ -124,12 +120,12 @@ const TableMovie = () => {
       searchedColumn === dataIndex ? (
         <Highlighter
           highlightStyle={{
-            backgroundColor: '#ffc069',
+            backgroundColor: "#ffc069",
             padding: 0,
           }}
           searchWords={[searchText]}
           autoEscape
-          textToHighlight={text ? text.toString() : ''}
+          textToHighlight={text ? text.toString() : ""}
         />
       ) : (
         text
@@ -137,28 +133,111 @@ const TableMovie = () => {
   });
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      width: '30%',
-      ...getColumnSearchProps('name'),
+      width: 300,
+      title: "Name",
+      dataIndex: "name",
+      key: "name",
+      ...getColumnSearchProps("name"),
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
-      width: '20%',
-      ...getColumnSearchProps('age'),
+      title: "Genre",
+      dataIndex: "genre",
+      key: "genre",
+      ...getColumnSearchProps("genre"),
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
-      ...getColumnSearchProps('address'),
-      sorter: (a, b) => a.address.length - b.address.length,
-      sortDirections: ['descend', 'ascend'],
+      width: 100,
+      title: "Duration (minute)",
+      dataIndex: "duration",
+      key: "duration",
+      // ...getColumnSearchProps("duration"),
+      sorter: (a, b) => a.duration - b.duration,
+      sortDirections: ["descend", "ascend"],
+    },
+    {
+      title: "Actors",
+      dataIndex: "actors",
+      key: "actors",
+      ...getColumnSearchProps("actors"),
+    },
+    {
+      title: "Director",
+      dataIndex: "director",
+      key: "director",
+      ...getColumnSearchProps("director"),
+    },
+    {
+      width: "20%",
+      title: "Content",
+      dataIndex: "content",
+      key: "content",
+      ...getColumnSearchProps("content"),
+    },
+    {
+      width: "200px",
+      title: "Posters",
+      dataIndex: "posters",
+      key: "posters",
+      render: (_, item) => {
+        return <Image src={item.posters} />;
+      },
+    },
+
+    {
+      align: "center",
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      width: 80,
+      filters: [
+        {
+          text: "Hide",
+          value: "Hide",
+        },
+        {
+          text: "Show",
+          value: "Show",
+        },
+      ],
+      onFilter: (value, record) => record.status.startsWith(value),
+    },
+    {
+      width: 110,
+      title: "Action",
+      dataIndex: "div",
+      // eslint-disable-next-line no-unused-vars
+      render: (text, item) => {
+        return (
+          <Space size={5}>
+            <Link type="link" onClick={() => onEdit(item.id)}>
+              Edit
+            </Link>
+            <div>|</div>
+            <Popconfirm
+              title="Xác nhận xóa?"
+              onConfirm={() => onDelete(item.id)}
+            >
+              <Link type="link">Delete</Link>
+            </Popconfirm>
+          </Space>
+        );
+      },
     },
   ];
-  return <Table columns={columns} dataSource={data} />;
+  return (
+    <Table
+      bordered
+      size="small"
+      columns={columns}
+      dataSource={dataSource}
+      onChange={handleChange}
+      scroll={{
+        y: 650,
+      }}
+      pagination={{
+        pageSize: 10,
+      }}
+    />
+  );
 };
 export default TableMovie;

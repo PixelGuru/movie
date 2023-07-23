@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useEffect } from "react";
 import { DatePicker, Form, Input, Modal, Select } from "antd";
@@ -26,22 +27,22 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
 
   const onOk = async () => {
     const values = await form.validateFields();
-    values.birthday = dayjs(values.birthday).format("YYYY-MM-DD");
+    // values.birthday = dayjs(values.birthday).format("YYYY-MM-DD");
     onSubmit(formData.id, values);
-    console.log(values.birthday)
+    // console.log(values.birthday)
   };
 
   const onCancel = () => {
     setOpen(false);
   };
-  const onDatePickerChange = (date) => {
-    if (date) {
-      const formattedDate = dayjs(date).format("DD/MM/YYYY");
-      console.log("Ngày được chọn:", formattedDate);
-    } else {
-      console.log("Ngày không được chọn");
-    }
-  };
+  // const onDatePickerChange = (date) => {
+  //   if (date) {
+  //     const formattedDate = dayjs(date).format("DD/MM/YYYY");
+  //     console.log("Ngày được chọn:", formattedDate);
+  //   } else {
+  //     console.log("Ngày không được chọn");
+  //   }
+  // };
   return (
     <Modal open={open} onOk={onOk} onCancel={onCancel}>
       <Form form={form} layout="vertical">
@@ -63,7 +64,7 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
           />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           name="birthday"
           label="Birthday"
           rules={[{ required: true, message: "Nhập ngày sinh" }]}
@@ -71,7 +72,7 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
           <DatePicker style={{ width: "50%" }}  format={"DD/MM/YYYY"}
           onChange={onDatePickerChange} 
           />
-        </Form.Item>
+        </Form.Item> */}
 
         <Form.Item
           name="email"

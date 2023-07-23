@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ListUser as ResourcesListUser;
 use App\Models\ListUser as ModelsListUser;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Hash;
@@ -38,20 +39,21 @@ class ListUser  extends Controller
      */
     public function store(Request $request)
     {
-        // try {
+        try {
         $request->validate([
             'name' => 'required',
             // 'gender' => 'required',
-            // 'birthday' => 'required',
+            // 'birthday' => 'required|date_format:d/m/Y',
             'email' => 'required',
             'password' => 'required',
             // 'phone' => 'required',
             'role' =>  Rule::in([0, 1, 2]),
         ]);
+        $formattedBirthday = Carbon::createFromFormat('d/m/Y', $request->birthday)->format('Y-m-d');
         $listUser = ModelsListUser::create([
             'name' => $request->name,
             'gender' => $request->gender,
-            'birthday' => $request->birthday,
+            // 'birthday' => $formattedBirthday,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
@@ -62,18 +64,19 @@ class ListUser  extends Controller
             new ResourcesListUser($listUser),
             Response::HTTP_OK
         );
-        // } catch (ValidationException $e) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Validation error',
-        //         'errors' => $e->errors(),
-        //     ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
-        // } catch (\Exception $e) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Something went wrong',
-        //     ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        // }
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid date format: ' . $request->birthday,
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
     /**
      * Display the specified resource.

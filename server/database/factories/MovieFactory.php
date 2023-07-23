@@ -23,6 +23,7 @@ class MovieFactory extends Factory
             'actors' => fake()->name,
             'director' => fake()->name,
             'content' => fake()->text,
+            'posters'=>fake()->imageUrl(), 
             'status' => fake()->numberBetween(0, 1),
 
 

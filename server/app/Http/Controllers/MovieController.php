@@ -7,6 +7,7 @@ use App\Http\Resources\MovieResource;
 use App\Models\Movie;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class MovieController extends Controller
@@ -20,8 +21,8 @@ class MovieController extends Controller
         return response()->json(
             [
                 'status' => true,
-                'message' => 'List Movie',
-                'data' => MovieResource::collection($movie),
+                'message' => 'List movie',
+                'data' =>  MovieResource::collection($movie),
             ],
             Response::HTTP_OK
         );
@@ -32,45 +33,43 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
-        try {
-            $request->validate([
-                'name' => 'required',
-                'genre' => 'required',
-                'duration' => 'required',
-                'actors' => 'required',
-                'director' => 'required',
-                'content' => 'required',
-                'status' => 'required|in:0,1',
-            ]);
-            $movie = Movie::create([
-                'name' => $request->name,
-                'genre' => $request->genre,
-                'duration' => $request->duration,
-                'actors' => $request->actors,
-                'director' => $request->director,
-                'content' => $request->content,
-                'status' => $request->status,
-            ]);
-            return response()->json(
-                [
-                    'status' => true,
-                    'message' => 'Add movie success',
-                    'data' =>  new MovieResource($movie),
-                ],
-                Response::HTTP_OK
-            );
-        } catch (ValidationException $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Validation error',
-                'errors' => $e->errors(),
-            ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Something went wrong',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        // try {
+        $request->validate([
+            'name' => 'required',
+            'genre' => 'required',
+            'duration' => 'required',
+            'actors' => 'required',
+            'director' => 'required',
+            'content' => 'required',
+            'status' => Rule::in([0, 1]),
+        ]);
+        $movie = Movie::create([
+            'name' => $request->name,
+            'genre' => $request->genre,
+            'duration' => $request->duration,
+            'actors' => $request->actors,
+            'director' => $request->director,
+            'content' => $request->content,
+            'status' => $request->status,
+        ]);
+        return response()->json(
+
+            new MovieResource($movie),
+
+            Response::HTTP_OK
+        );
+        // } catch (ValidationException $e) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Validation error',
+        //         'errors' => $e->errors(),
+        //     ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
+        // } catch (\Exception $e) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Something went wrong',
+        //     ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        // }
     }
 
     /**
@@ -116,22 +115,25 @@ class MovieController extends Controller
             );
         } else {
             try {
-                $request->validate([
+                $data = $request->validate([
                     'name' => 'required',
                     'genre' => 'required',
                     'duration' => 'required',
                     'actors' => 'required',
                     'director' => 'required',
                     'content' => 'required',
-                    'status' => 'required|in:0,1',
+                    'status' => Rule::in(['Hide', 'Show']),
                 ]);
-                $movie->name = $request->name;
-                $movie->genre = $request->genre;
-                $movie->duration = $request->duration;
-                $movie->actors = $request->actors;
-                $movie->director = $request->director;
-                $movie->content = $request->content;
-                $movie->status = $request->status;
+
+                $data['status'] = ($data['status'] === 'Show') ? 1 : 0;
+                // dd($data);
+                $movie->name = $data['name'];
+                $movie->genre = $data['genre'];
+                $movie->duration = $data['duration'];
+                $movie->actors = $data['actors'];
+                $movie->director = $data['director'];
+                $movie->content = $data['content'];
+                $movie->status = $data['status'];
                 $movie->save();
                 return response()->json(
                     [

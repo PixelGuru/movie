@@ -15,9 +15,11 @@ class MovieResource extends JsonResource
     public function toArray(Request $request): array
     {
         $movieStatus = [
-            0 => 'hide',
-            1 => 'show',
+            0 => 'Hide',
+            1 => 'Show',
         ];
+
+
         $movieStatusText = isset($movieStatus[$this->status]) ? $movieStatus[$this->status] : 'N/A';
 
         return [
@@ -28,7 +30,8 @@ class MovieResource extends JsonResource
             'actors' => $this->actors,
             'director' => $this->director,
             'content' => $this->content,
-            'status' =>    $movieStatusText,
+            'posters' => $this->posters,
+            'status' => $movieStatusText,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y'),
         ];
