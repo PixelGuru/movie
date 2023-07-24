@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CinemaBranchController;
 use App\Http\Controllers\CinemaController;
+use App\Http\Controllers\Client\MovieController as ClientMovieController;
 use App\Http\Controllers\FoodController;
 use App\Http\Controllers\ListUser as ControllersListUser;
 use App\Http\Controllers\MovieController;
@@ -36,3 +37,4 @@ Route::resource('screenings', ScreeningController::class);
 Route::resource('foods', FoodController::class);
 Route::resource('tickets', TicketController::class);
 Route::resource('movie-reviews', MovieReviewController::class);
+Route::get('show', [ClientMovieController::class, 'index']);

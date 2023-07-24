@@ -40,30 +40,31 @@ class ListUser  extends Controller
     public function store(Request $request)
     {
         try {
-        $request->validate([
-            'name' => 'required',
-            // 'gender' => 'required',
-            // 'birthday' => 'required|date_format:d/m/Y',
-            'email' => 'required',
-            'password' => 'required',
-            // 'phone' => 'required',
-            'role' =>  Rule::in([0, 1, 2]),
-        ]);
-        $formattedBirthday = Carbon::createFromFormat('d/m/Y', $request->birthday)->format('Y-m-d');
-        $listUser = ModelsListUser::create([
-            'name' => $request->name,
-            'gender' => $request->gender,
-            // 'birthday' => $formattedBirthday,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'phone' => $request->phone,
-            'role' => $request->role,
-            'level' => $request->level
-        ]);
-        return response()->json(
-            new ResourcesListUser($listUser),
-            Response::HTTP_OK
-        );
+            $request->validate([
+                'name' => 'required',
+                // 'gender' => 'required',
+                'birthday' => 'required|date_format:d/m/Y',
+                'email' => 'required',
+                'password' => 'required',
+                // 'phone' => 'required',
+                'role' =>  Rule::in([0, 1, 2]),
+            ]);
+            $formattedBirthday = Carbon::createFromFormat('d/m/Y', $request->birthday)->format('Y-m-d');
+            $listUser = ModelsListUser::create([
+                'name' => $request->name,
+                'gender' => $request->gender,
+                'birthday' => $formattedBirthday,
+                // 'birthday' => $request->birthday,
+                'email' => $request->email,
+                'password' => Hash::make($request->password),
+                'phone' => $request->phone,
+                'role' => $request->role,
+                'level' => $request->level
+            ]);
+            return response()->json(
+                new ResourcesListUser($listUser),
+                Response::HTTP_OK
+            );
         } catch (ValidationException $e) {
             return response()->json([
                 'status' => false,
@@ -71,10 +72,10 @@ class ListUser  extends Controller
                 'errors' => $e->errors(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            // dd($e->getMessage());
             return response()->json([
                 'status' => false,
-                'message' => 'Invalid date format: ' . $request->birthday,
+                'message' => 'Invalid  format: ',
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
