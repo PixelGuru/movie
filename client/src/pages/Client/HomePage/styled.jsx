@@ -1,6 +1,7 @@
 import { styled } from "styled-components";
 import BGSession from "../../../assets/pattern.png";
 import { Link } from "react-router-dom";
+import { Button } from "antd";
 
 export const Cart = styled.div`
   background-image: url(${BGSession});
@@ -22,7 +23,7 @@ export const Li = styled.ul`
 `;
 
 export const StyleLink = styled(Link)`
-font-family: 'Anton', sans-serif;
+  font-family: "Anton", sans-serif;
   font-weight: 600;
   font-size: 30px;
   text-transform: uppercase;
@@ -37,5 +38,46 @@ font-family: 'Anton', sans-serif;
   text-align: right;
   &:hover {
     color: #f37520 !important;
+  }
+`;
+
+export const StyledButton = styled(Button)`
+  background: #e00d7a;
+  color: #fff;
+  border: none;
+  font-size: 15px;
+  &:hover {
+    background: #f37737;
+    color: #fff !important;
+  }
+`;
+export const StyledCarousel = styled.div`
+  background: rgb(26 0 22 / 40%);
+  position: relative;
+`;
+export const Next = styled.a`
+  position: absolute;
+  top: 50%;
+  right: 10%;
+  transform: translateY(-50%);
+  font-size: 3rem;
+  color: #fff;
+  transition: 0.5s;
+  cursor: pointer;
+  &:hover {
+    color: #f37635;
+  }
+`;
+
+export const Pre = styled.a`
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  transform: translateY(-50%);
+  font-size: 3rem;
+  transition: 0.5s;
+  cursor: pointer;
+  &:hover {
+    color: #f37635;
   }
 `;

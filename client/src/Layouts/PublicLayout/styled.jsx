@@ -6,11 +6,11 @@ import BGFooter from "../../assets/bg-footer.jpg";
 
 export const LayoutPublic = styled.div`
     background-image: url(${BGBody});
-    height: 100vh;
+    height: auto;
 `;
 export const Bgbody = styled.div`
     background-image: url(${BGTop});
-    height: 100vh;
+    // height: 100vh;
 `;
 export const Header = styled.div`
     display: grid;
@@ -103,7 +103,7 @@ export const UlFooter = styled.div`
     display: flex;
     justify-content: space-between;
     width: 100%;
-    margin: 150px 0;
+    margin: 90px 0;
 `;
 export const LiFooter = styled.div`
     list-style: none;
@@ -127,7 +127,7 @@ export const LiTech = styled.div`
 export const Payment = styled.div`
     text-align: center;
     line-height: 50px;
-    margin: 20px 0;
+    margin: 10px 0;
 `;
 
 export const Img = styled.img`

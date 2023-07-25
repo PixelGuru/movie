@@ -37,4 +37,4 @@ Route::resource('screenings', ScreeningController::class);
 Route::resource('foods', FoodController::class);
 Route::resource('tickets', TicketController::class);
 Route::resource('movie-reviews', MovieReviewController::class);
-Route::get('show', [ClientMovieController::class, 'index']);
+Route::get('/movie/show', [ClientMovieController::class, 'showCarousel']);

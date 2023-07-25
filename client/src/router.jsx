@@ -8,8 +8,13 @@ import LoginAdmin from "./pages/Admin/Login/LoginAdmin";
 import User from "./pages/Admin/User/User";
 import Movie from "./pages/Admin/Movie/Movie";
 import News from "./pages/Admin/News/News";
+import Test from "./components/Test";
 
 const router = createBrowserRouter([
+    {
+        path: "/test",
+        element: <Test />,
+    },
     {
         path: "/admin",
         element: <LoginAdmin />,
@@ -22,6 +27,7 @@ const router = createBrowserRouter([
                 path: "/",
                 element: <Home />,
             },
+          
         ],
     },
     {

@@ -1,10 +1,48 @@
-import { Form, Select, Space } from "antd";
+import { useRef } from "react";
+import { Carousel, Form, Select, Space } from "antd";
 import SessionHero from "./SessionHero/SessionHero";
-import { Cart, Content, Li, StyleLink, Ul } from "./styled";
-
+import {
+  Cart,
+  Content,
+  Li,
+  Next,
+  Pre,
+  StyleLink,
+  StyledButton,
+  StyledCarousel,
+  Ul,
+} from "./styled";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { DoubleLeftOutlined, DoubleRightOutlined } from "@ant-design/icons";
 
 const Home = () => {
+  const carouselRef = useRef();
   const [form] = Form.useForm();
+  const [images, setImages] = useState([]);
+  const [movieNames, setMovieNames] = useState([]);
+
+  const fetchData = () => {
+    axios.get("http://127.0.0.1:8000/api/movie/show").then((res) => {
+      const data = res.data.data;
+      const imageUrls = data.map((item) => item.posters);
+      const names = data.map((item) => item.name);
+      setImages(imageUrls);
+      setMovieNames(names);
+    });
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const onNextClick = () => {
+    carouselRef.current.next();
+  };
+
+  const onPrevClick = () => {
+    carouselRef.current.prev();
+  };
   return (
     <div style={{ color: "#fff" }}>
       <SessionHero />
@@ -67,7 +105,50 @@ const Home = () => {
             </Li>
           </Space>
         </Ul>
+        <StyledCarousel>
+          <Carousel
+            ref={carouselRef}
+            style={{ width: "100%", margin: "0 auto", padding: "50px 250px" }}
+            slidesToShow={5}
+          >
+            {images.map((imageUrl, index) => (
+              <div key={index}>
+                <img
+                  style={{ width: "100%", height: "365px", padding: "0 10px" }}
+                  src={imageUrl}
+                  alt={`Image ${index}`}
+                />
+                <div
+                  style={{
+                    padding: "0 10px",
+                    lineHeight: 1.5,
+                    fontSize: 18,
+                    color: "#FFF",
+                  }}
+                >
+                  <p style={{ padding: "10px 0" }}>{movieNames[index]} </p>
+                  <StyledButton style={{ marginBottom: "10px" }}>
+                    Đặt vé
+                  </StyledButton>
+                </div>
+              </div>
+            ))}
+          </Carousel>
+
+          <Pre onClick={onPrevClick}>
+            <DoubleLeftOutlined />
+          </Pre>
+          <Next onClick={onNextClick}>
+            <DoubleRightOutlined />
+          </Next>
+        </StyledCarousel>
       </Content>
+      <div>
+        <h2>ƯU ĐÃI</h2>
+        <div>
+          ádddd
+        </div>
+      </div>
     </div>
   );
 };

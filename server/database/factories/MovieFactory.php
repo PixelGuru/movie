@@ -17,7 +17,7 @@ class MovieFactory extends Factory
     {
         
         return [
-            'name' => fake()->name,
+            'name' => fake()->name, 
             'genre' => fake()->name,
             'duration' => fake()->numberBetween(60, 190),
             'actors' => fake()->name,
@@ -25,9 +25,6 @@ class MovieFactory extends Factory
             'content' => fake()->text,
             'posters'=>fake()->imageUrl(), 
             'status' => fake()->numberBetween(0, 1),
-
-
-
         ];
     }
 }
