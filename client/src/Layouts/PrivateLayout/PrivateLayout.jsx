@@ -11,6 +11,7 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
   BookOutlined,
+  VideoCameraOutlined,
 } from "@ant-design/icons";
 import logo from "../../assets/logo.png";
 const { Header, Sider, Content } = Layout;
@@ -37,7 +38,7 @@ const PrivateLayout = () => {
     <Layout style={{ height: "100vh" }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div style={{ display: "flex", justifyContent: "center" }}>
-          <Link to="/" style={{display: 'flex', justifyContent: 'center'}}>
+          <Link to="/" style={{ display: "flex", justifyContent: "center" }}>
             <img src={logo} alt="" width="90%" style={{ margin: "25px 0 " }} />
           </Link>
         </div>
@@ -63,7 +64,21 @@ const PrivateLayout = () => {
               label: <Link to="admin/movie">Movie</Link>,
             },
             {
-              key: "4",
+              icon: <VideoCameraOutlined />,
+              label: "Screening Show",
+              children: [
+                {
+                  key: "4",
+                  label: <Link to="/admin/screening/HoChiMinh">Ho Chi Minh</Link>,
+                },
+                {
+                  key: "5",
+                  label: <Link to="/admin/screening/DaNang">Da Nang</Link>,
+                },
+              ],
+            },
+            {
+              key: "6",
               icon: <BookOutlined />,
               label: <Link to="admin/news">News</Link>,
             },
@@ -95,7 +110,6 @@ const PrivateLayout = () => {
             padding: 24,
             minHeight: 280,
             background: colorBgContainer,
-            
           }}
         >
           <Outlet />

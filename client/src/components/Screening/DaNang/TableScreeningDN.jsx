@@ -4,11 +4,11 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button, Input, Popconfirm, Space, Table } from "antd";
 import { useRef, useState } from "react";
 import Highlighter from "react-highlight-words";
-import { Image } from "./styled";
+// import { Image } from "./styled";
 import { Link } from "react-router-dom";
-import { styled } from "styled-components";
+// import { styled } from "styled-components";
 
-const TableMovie = ({ dataSource, onDelete, onEdit }) => {
+const TableScreeningDN = ({ dataSource, onDelete, onEdit }) => {
   const [filteredInfo, setFilteredInfo] = useState({});
   const [sortedInfo, setSortedInfo] = useState({});
   const [searchText, setSearchText] = useState("");
@@ -134,81 +134,44 @@ const TableMovie = ({ dataSource, onDelete, onEdit }) => {
   const columns = [
     {
       width: 300,
-      title: "Name",
-      dataIndex: "name",
-      key: "name",
-      ...getColumnSearchProps("name"),
+      title: "Movie Name",
+      dataIndex: "movie_name",
+      key: "movie_name",
+      ...getColumnSearchProps("movie_name"),
     },
     {
-      title: "Genre",
-      dataIndex: "genre",
-      key: "genre",
-      ...getColumnSearchProps("genre"),
+      title: "Date Show",
+      dataIndex: "date_show",
+      key: "date_show",
+      ...getColumnSearchProps("date_show"),
     },
     {
-      width: 100,
-      title: "Duration (minute)",
-      dataIndex: "duration",
-      key: "duration",
+     
+      title: "Start Time",
+      dataIndex: "start_time",
+      key: "start_time",
       // ...getColumnSearchProps("duration"),
-      sorter: (a, b) => a.duration - b.duration,
+      sorter: (a, b) => a.start_time - b.start_time,
       sortDirections: ["descend", "ascend"],
     },
     {
-      width: 100,
-      title: "Release Date",
-      dataIndex: "release_date",
-      key: "release_date",
-      // ...getColumnSearchProps("duration"),
-      sorter: (a, b) => a.release_date - b.release_date,
-      sortDirections: ["descend", "ascend"],
+      title: "End Time",
+      dataIndex: "end_time",
+      key: "end_time",
+      ...getColumnSearchProps("end_time"),
     },
     {
-      title: "Actors",
-      dataIndex: "actors",
-      key: "actors",
-      ...getColumnSearchProps("actors"),
-    },
-    {
-      title: "Director",
-      dataIndex: "director",
-      key: "director",
-      ...getColumnSearchProps("director"),
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      ...getColumnSearchProps("price"),
     },
     {
       width: "20%",
-      title: "Content",
-      dataIndex: "content",
-      key: "content",
-      ...getColumnSearchProps("content"),
-    },
-    {
-      width: "200px",
-      title: "Posters",
-      dataIndex: "posters",
-      key: "posters",
-      render: (_, item) => {
-        return <Image src={item.posters} />;
-      },
-    },
-
-    {
-      align: "center",
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      width: 80,
-      filters: [
-        {
-          text: "Hide",
-          value: "Hide",
-        },
-        {
-          text: "Show",
-          value: "Show",
-        },
-      ],
-      onFilter: (value, record) => record.status.startsWith(value),
+      title: "Remaining Seats",
+      dataIndex: "remaining_seats",
+      key: "remaining_seats",
+      ...getColumnSearchProps("remaining_seats"),
     },
     {
       width: 110,
@@ -249,4 +212,4 @@ const TableMovie = ({ dataSource, onDelete, onEdit }) => {
     />
   );
 };
-export default TableMovie;
+export default TableScreeningDN;

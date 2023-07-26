@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cinemas extends Model
 {
     use HasFactory;
-    protected $fillable = ['cinema_branch_id', 'name', 'address', 'seats'];
+    protected $fillable = ['cinema_branch_id', 'name', 'address', 'capacity'];
 
     public function cinemaBranch()
     {

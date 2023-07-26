@@ -14,13 +14,14 @@ class MovieResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $movieStatus = [
-            0 => 'Hide',
-            1 => 'Show',
-        ];
+        if ($this->status === 0) {
+            $movieStatusText = 'Hide';
+        } elseif ($this->status === 1) {
+            $movieStatusText = 'Show';
+        } else {
+            $movieStatusText = 'Coming Soon';
+        }
 
-
-        $movieStatusText = isset($movieStatus[$this->status]) ? $movieStatus[$this->status] : 'N/A';
 
         return [
             'id' => $this->id,
@@ -29,6 +30,7 @@ class MovieResource extends JsonResource
             'duration' => $this->duration,
             'actors' => $this->actors,
             'director' => $this->director,
+            'release_date'=>$this->release_date,
             'content' => $this->content,
             'posters' => $this->posters,
             'status' => $movieStatusText,

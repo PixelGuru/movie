@@ -21,28 +21,28 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
           ? dayjs(formData.birthday).format("DD/MM/YYYY")
           : null,
       };
-      form.setFieldsValue(formattedData);
+      console.log(formData.birthday);
+      form.setFieldsValue(formData);
     }
   }, [open, formData]);
 
   const onOk = async () => {
     const values = await form.validateFields();
-    // values.birthday = dayjs(values.birthday).format("YYYY-MM-DD");
+    values.birthday = values.birthday.format("DD/MM/YYYY");
     onSubmit(formData.id, values);
-    // console.log(values.birthday)
+    console.log(values.birthday);
+    console.log(values);
   };
 
   const onCancel = () => {
     setOpen(false);
   };
-  // const onDatePickerChange = (date) => {
-  //   if (date) {
-  //     const formattedDate = dayjs(date).format("DD/MM/YYYY");
-  //     console.log("Ngày được chọn:", formattedDate);
-  //   } else {
-  //     console.log("Ngày không được chọn");
-  //   }
-  // };
+  const onDatePickerChange = (date) => {
+    if (date) {
+      const formattedDate = date.format("DD/MM/YYYY");
+      console.log("Ngày được chọn:", formattedDate);
+    }
+  };
   return (
     <Modal open={open} onOk={onOk} onCancel={onCancel}>
       <Form form={form} layout="vertical">
@@ -64,15 +64,17 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
           />
         </Form.Item>
 
-        {/* <Form.Item
+        <Form.Item
           name="birthday"
           label="Birthday"
           rules={[{ required: true, message: "Nhập ngày sinh" }]}
         >
-          <DatePicker style={{ width: "50%" }}  format={"DD/MM/YYYY"}
-          onChange={onDatePickerChange} 
+          <DatePicker
+            style={{ width: "50%" }}
+            format={"DD/MM/YYYY"}
+            onChange={onDatePickerChange}
           />
-        </Form.Item> */}
+        </Form.Item>
 
         <Form.Item
           name="email"
@@ -104,9 +106,9 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
         >
           <Select
             options={[
-              { value: "0", label: "Khách hàng" },
-              { value: "1", label: "Nhân viên" },
-              { value: "3", label: "Admin" },
+              { value: "Khách hàng", label: "Khách hàng" },
+              { value: "Nhân viên", label: "Nhân viên" },
+              { value: "Admin", label: "Admin" },
             ]}
           />
         </Form.Item>

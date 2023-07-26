@@ -9,6 +9,8 @@ import User from "./pages/Admin/User/User";
 import Movie from "./pages/Admin/Movie/Movie";
 import News from "./pages/Admin/News/News";
 import Test from "./components/Test";
+import ScreeningHoChiMinh from "./pages/Admin/Screenings/ScreeningHoChiMinh";
+import ScreeningDaNang from "./pages/Admin/Screenings/ScreeningDaNang";
 
 const router = createBrowserRouter([
     {
@@ -45,6 +47,14 @@ const router = createBrowserRouter([
             {
                 path: "/admin/movie",
                 element: <Movie />,
+            },
+            {
+                path: "/admin/screening/HoChiMinh",
+                element: <ScreeningHoChiMinh />,
+            },
+            {
+                path: "/admin/screening/DaNang",
+                element: <ScreeningDaNang />,
             },
             {
                 path: "/admin/news",

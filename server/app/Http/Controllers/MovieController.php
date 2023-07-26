@@ -33,43 +33,43 @@ class MovieController extends Controller
      */
     public function store(Request $request)
     {
-        // try {
-        $request->validate([
-            'name' => 'required',
-            'genre' => 'required',
-            'duration' => 'required',
-            'actors' => 'required',
-            'director' => 'required',
-            'content' => 'required',
-            'status' => Rule::in([0, 1]),
-        ]);
-        $movie = Movie::create([
-            'name' => $request->name,
-            'genre' => $request->genre,
-            'duration' => $request->duration,
-            'actors' => $request->actors,
-            'director' => $request->director,
-            'content' => $request->content,
-            'status' => $request->status,
-        ]);
-        return response()->json(
-
-            new MovieResource($movie),
-
-            Response::HTTP_OK
-        );
-        // } catch (ValidationException $e) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Validation error',
-        //         'errors' => $e->errors(),
-        //     ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
-        // } catch (\Exception $e) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Something went wrong',
-        //     ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        // }
+        try {
+            $request->validate([
+                'name' => 'required',
+                'genre' => 'required',
+                'duration' => 'required',
+                'release_date' => 'required',
+                'actors' => 'required',
+                'director' => 'required',
+                'content' => 'required',
+                'status' => Rule::in([0, 1, 2]),
+            ]);
+            $movie = Movie::create([
+                'name' => $request->name,
+                'genre' => $request->genre,
+                'duration' => $request->duration,
+                'release_date' => $request->release_date,
+                'actors' => $request->actors,
+                'director' => $request->director,
+                'content' => $request->content,
+                'status' => $request->status,
+            ]);
+            return response()->json(
+                new MovieResource($movie),
+                Response::HTTP_OK
+            );
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Validation error',
+                'errors' => $e->errors(),
+            ], Response::HTTP_UNSUPPORTED_MEDIA_TYPE);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -122,10 +122,17 @@ class MovieController extends Controller
                     'actors' => 'required',
                     'director' => 'required',
                     'content' => 'required',
-                    'status' => Rule::in(['Hide', 'Show']),
+                    'status' => Rule::in(['Hide', 'Show', 'Coming Soon']),
                 ]);
 
-                $data['status'] = ($data['status'] === 'Show') ? 1 : 0;
+
+                if ($data['status'] === 'Hide') {
+                    $data['status'] = 0;
+                } elseif ($data['status'] === 'Show') {
+                    $data['status'] = 1;
+                } else {
+                    $data['status'] = 2;
+                }
                 // dd($data);
                 $movie->name = $data['name'];
                 $movie->genre = $data['genre'];

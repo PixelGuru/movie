@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('cinema_branch_id')->nullable();
             $table->string('name');
             $table->string('address')->nullable();
-            $table->integer('seats')->nullable();
+            $table->integer('capacity')->nullable();
             $table->timestamps();
 
             $table->foreign('cinema_branch_id')->references('id')->on('cinema_branches')->onDelete('cascade');

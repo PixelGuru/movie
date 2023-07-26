@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Thiết lập khóa ngoại tới bảng 'movies'
-            $table->foreign('movie_id')->references('id')->on('movies')->onDelete('cascade');
+            $table->foreign('movie_id')->references('id')->on('movies');
         });
     }
 

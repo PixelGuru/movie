@@ -21,8 +21,7 @@ class PosterFactory extends Factory
         $MovieId = fake()->randomElement($arrayMovie);
         return [
             'movie_id' =>  $MovieId,
-            'image_path' => $this->faker->imageUrl(), // Đường dẫn tới hình ảnh của poster
-            // Thêm các cột khác nếu cần
+            'image_path' => $this->faker->imageUrl(), 
         ];
     }
 }

@@ -68,6 +68,13 @@ const ModalMovie = ({ open, setOpen, onCancel, onSubmit, formData }) => {
         >
           <InputNumber style={{ width: 200 }} />
         </Form.Item>
+        <Form.Item
+          name="release_date"
+          label="Release Date"
+          // rules={[{ required: true, message: "Enter Release Date" }]}
+        >
+          <Input />
+        </Form.Item>
 
         <Form.Item
           name="actors"
@@ -119,7 +126,8 @@ const ModalMovie = ({ open, setOpen, onCancel, onSubmit, formData }) => {
           <Select
             options={[
               { value: 'Hide', label: "Hide" },
-              { value: 'Show', label: "Show" },
+              { value: 'Show', label: "Show"},
+              {value: 'Coming Soon', label: "Coming Soon" },
             ]}
           />
         </Form.Item>

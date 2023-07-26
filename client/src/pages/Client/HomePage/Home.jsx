@@ -15,7 +15,6 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { DoubleLeftOutlined, DoubleRightOutlined } from "@ant-design/icons";
-
 const Home = () => {
   const carouselRef = useRef();
   const [form] = Form.useForm();
@@ -111,7 +110,7 @@ const Home = () => {
             style={{ width: "100%", margin: "0 auto", padding: "50px 250px" }}
             slidesToShow={5}
           >
-            {images.map((imageUrl, index) => (
+             {images.map((imageUrl, index) => (
               <div key={index}>
                 <img
                   style={{ width: "100%", height: "365px", padding: "0 10px" }}
@@ -145,9 +144,7 @@ const Home = () => {
       </Content>
       <div>
         <h2>ƯU ĐÃI</h2>
-        <div>
-          ádddd
-        </div>
+        <div>ádddd</div>
       </div>
     </div>
   );

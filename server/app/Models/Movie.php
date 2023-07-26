@@ -12,10 +12,11 @@ class Movie extends Model
         'name',
         'genre',
         'duration',
+        'release_date',
         'actors',
         'director',
         'content',
-        'image_path',
+        'posters',
         'status'
     ];
 
@@ -23,7 +24,6 @@ class Movie extends Model
     {
         return $this->hasMany(Screening::class);
     }
-    // Định nghĩa mối quan hệ một-múi-nhiều với bảng 'posters'
     public function posters()
     {
         return $this->hasMany(Poster::class);

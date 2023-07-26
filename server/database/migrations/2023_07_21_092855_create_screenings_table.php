@@ -16,7 +16,8 @@ return new class extends Migration
             $table->unsignedBigInteger('movie_id');
             $table->unsignedBigInteger('cinema_id');
             $table->unsignedBigInteger('cinema_branch_id')->nullable();
-            $table->dateTime('time');
+            $table->dateTime('start_time');
+            $table->dateTime('end_time');
             $table->decimal('price', 10, 2);
             $table->integer('remaining_seats');
             $table->timestamps();

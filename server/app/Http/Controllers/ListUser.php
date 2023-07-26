@@ -42,23 +42,37 @@ class ListUser  extends Controller
         try {
             $request->validate([
                 'name' => 'required',
-                // 'gender' => 'required',
-                'birthday' => 'required|date_format:d/m/Y',
+                'gender' => 'required',
+                'birthday' => 'required',
                 'email' => 'required',
                 'password' => 'required',
-                // 'phone' => 'required',
-                'role' =>  Rule::in([0, 1, 2]),
+                'phone' => 'required',
+                'role' =>  'required',
             ]);
+            if ($request->gender === 'Nan') {
+                $gender = 0;
+            } elseif ($request->gender === 'Nữ') {
+                $gender = 1;
+            } else {
+                $gender = 2;
+            }
+            if ($request->role === 'Khách hàng') {
+                $role = 0;
+            } elseif ($request->role === 'Nhân viên') {
+                $role = 1;
+            } else {
+                $role = 2;
+            }
             $formattedBirthday = Carbon::createFromFormat('d/m/Y', $request->birthday)->format('Y-m-d');
             $listUser = ModelsListUser::create([
                 'name' => $request->name,
-                'gender' => $request->gender,
+                'gender' => $gender,
                 'birthday' => $formattedBirthday,
                 // 'birthday' => $request->birthday,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'phone' => $request->phone,
-                'role' => $request->role,
+                'role' => $role,
                 'level' => $request->level
             ]);
             return response()->json(
@@ -71,13 +85,13 @@ class ListUser  extends Controller
                 'message' => 'Validation error',
                 'errors' => $e->errors(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        } catch (\Exception $e) {
-            // dd($e->getMessage());
-            return response()->json([
-                'status' => false,
-                'message' => 'Invalid  format: ',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        } 
+        // catch (\Exception $e) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'message' => 'Invalid  format: ',
+        //     ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        // }
     }
     /**
      * Display the specified resource.
