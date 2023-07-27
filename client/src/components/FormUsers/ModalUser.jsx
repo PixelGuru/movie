@@ -4,12 +4,12 @@ import { useEffect } from "react";
 import { DatePicker, Form, Input, Modal, Select } from "antd";
 import dayjs from "dayjs";
 import "dayjs/locale/en";
-const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
+const ModalUser = ({ open, setOpen, formData, onSubmit, setFormData }) => {
   const [form] = Form.useForm();
-
   useEffect(() => {
     if (!open) {
       form.resetFields();
+      setFormData("");
     }
   }, [open]);
 
@@ -18,11 +18,10 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
       const formattedData = {
         ...formData,
         birthday: formData.birthday
-          ? dayjs(formData.birthday).format("DD/MM/YYYY")
+          ? dayjs(formData.birthday, "DD/MM/YYYY")
           : null,
       };
-      console.log(formData.birthday);
-      form.setFieldsValue(formData);
+      form.setFieldsValue(formattedData);
     }
   }, [open, formData]);
 
@@ -30,11 +29,10 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
     const values = await form.validateFields();
     values.birthday = values.birthday.format("DD/MM/YYYY");
     onSubmit(formData.id, values);
-    console.log(values.birthday);
-    console.log(values);
   };
 
   const onCancel = () => {
+    form.resetFields();
     setOpen(false);
   };
   const onDatePickerChange = (date) => {
@@ -49,12 +47,16 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
         <Form.Item
           name="name"
           label="Name"
-          rules={[{ required: true, message: "Nhập tên" }]}
+          rules={[{ required: true, message: "Enter name" }]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item name="gender" label="Gender">
+        <Form.Item
+          name="gender"
+          label="Gender"
+          rules={[{ required: true, message: "Select gender" }]}
+        >
           <Select
             options={[
               { value: "Nam", label: "Nam" },
@@ -67,7 +69,7 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
         <Form.Item
           name="birthday"
           label="Birthday"
-          rules={[{ required: true, message: "Nhập ngày sinh" }]}
+          rules={[{ required: true, message: "Enter birthday" }]}
         >
           <DatePicker
             style={{ width: "50%" }}
@@ -79,30 +81,25 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
         <Form.Item
           name="email"
           label="email"
-          rules={[{ required: true, message: "Nhập Email" }, { type: "email" }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          name="password"
-          label="Password"
           rules={[
-            { required: true, message: "Nhập password" },
-            { min: 6 },
-            { max: 20 },
+            { required: true, message: "Enter Email" },
+            { type: "email" },
           ]}
         >
           <Input />
         </Form.Item>
 
-        <Form.Item name="phone" label="Phone">
+        <Form.Item
+          name="phone"
+          label="Phone"
+          rules={[{ required: true, message: "Enter phone" }]}
+        >
           <Input />
         </Form.Item>
         <Form.Item
           name="role"
           label="Role"
-          rules={[{ required: true, message: "Chọn quyền user" }]}
+          rules={[{ required: true, message: "Select role user" }]}
         >
           <Select
             options={[
@@ -114,7 +111,14 @@ const ModalUser = ({ open, setOpen, formData, onSubmit }) => {
         </Form.Item>
 
         <Form.Item name="level" label="Level">
-          <Input />
+          <Select
+            options={[
+              { value: "", label: "" },
+              { value: "Bạc", label: "Bạc" },
+              { value: "Vàng", label: "Vàng" },
+              { value: "Kim cương", label: "Kim cương" },
+            ]}
+          />
         </Form.Item>
       </Form>
     </Modal>

@@ -1,34 +1,53 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { Form, Input, InputNumber, Modal, Select } from "antd";
+import { DatePicker, Form, Input, InputNumber, Modal, Select } from "antd";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import TextArea from "antd/es/input/TextArea";
 
-import { useEffect } from "react";
-
-const ModalMovie = ({ open, setOpen, onCancel, onSubmit, formData }) => {
+const ModalMovie = ({ open, setOpen, onSubmit, formData, setFormData }) => {
   const [form] = Form.useForm();
   const { Option } = Select;
 
   useEffect(() => {
     if (!open) {
-      form.resetFields();
+      setFormData("");
     }
   }, [open]);
 
   useEffect(() => {
     if (open && formData.id) {
-      form.setFieldsValue(formData);
+      const formattedData = {
+        ...formData,
+        release_date: formData.release_date
+          ? dayjs(formData.release_date, "DD/MM/YYYY")
+          : null,
+      };
+      form.setFieldsValue(formattedData);
     }
   }, [open, formData]);
 
+  const onCancel = () => {
+    form.resetFields();
+    setOpen(false);
+  };
   const onOk = async () => {
     const values = await form.validateFields();
+    values.release_date = values.release_date.format("DD/MM/YYYY");
     onSubmit(formData.id, values);
+    form.resetFields();
     console.log(values);
   };
   const onEditorChange = (evt) => {
     console.log(evt.editor.getData());
+  };
+  const onDatePickerChange = (date) => {
+    if (date) {
+      const formattedDate = date.format("DD/MM/YYYY");
+      console.log("Ngày được chọn:", formattedDate);
+    }
   };
 
   return (
@@ -38,8 +57,9 @@ const ModalMovie = ({ open, setOpen, onCancel, onSubmit, formData }) => {
       open={open}
       onOk={onOk}
       onCancel={onCancel}
+      style={{ top: 20 }}
     >
-      <Form form={form} layout="vertical">
+      <Form form={form} onOk={onOk} onCancel={onCancel} layout="vertical">
         <Form.Item
           name="name"
           label="Name"
@@ -64,16 +84,23 @@ const ModalMovie = ({ open, setOpen, onCancel, onSubmit, formData }) => {
         <Form.Item
           name="duration"
           label="Duration"
-          rules={[{ required: true, message: "Enter Duration" }, {type: "integer"}]}
+          rules={[
+            { required: true, message: "Enter Duration" },
+            { type: "integer" },
+          ]}
         >
           <InputNumber style={{ width: 200 }} />
         </Form.Item>
         <Form.Item
           name="release_date"
           label="Release Date"
-          // rules={[{ required: true, message: "Enter Release Date" }]}
+          rules={[{ required: true, message: "Enter Release Date" }]}
         >
-          <Input />
+          <DatePicker
+            style={{ width: "50%" }}
+            format={"DD/MM/YYYY"}
+            onChange={onDatePickerChange}
+          />
         </Form.Item>
 
         <Form.Item
@@ -95,28 +122,9 @@ const ModalMovie = ({ open, setOpen, onCancel, onSubmit, formData }) => {
         <Form.Item
           name="content"
           label="Content"
-          // rules={[{ required: true, message: "Enter Content" }]}
+          rules={[{ required: true, message: "Enter Content" }]}
         >
-          {/* <CKEditor
-            styled={{ with: 100000 }}
-            editor={ClassicEditor}
-            data="<p>Hello from CKEditor 5!</p>"
-            onReady={(editor) => {
-              // You can store the "editor" and use when it is needed.
-              console.log("Editor is ready to use!", editor);
-            }}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              console.log({ event, editor, data });
-            }}
-            onBlur={(event, editor) => {
-              console.log("Blur.", editor);
-            }}
-            onFocus={(event, editor) => {
-              console.log("Focus.", editor);
-            }}
-          /> */}
-          <Input />
+          <TextArea rows={6} />
         </Form.Item>
         <Form.Item
           name="status"
@@ -125,9 +133,9 @@ const ModalMovie = ({ open, setOpen, onCancel, onSubmit, formData }) => {
         >
           <Select
             options={[
-              { value: 'Hide', label: "Hide" },
-              { value: 'Show', label: "Show"},
-              {value: 'Coming Soon', label: "Coming Soon" },
+              { value: "Hide", label: "Hide" },
+              { value: "Show", label: "Show" },
+              { value: "Coming Soon", label: "Coming Soon" },
             ]}
           />
         </Form.Item>

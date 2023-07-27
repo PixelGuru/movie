@@ -14,9 +14,6 @@ use Illuminate\Validation\ValidationException;
 
 class ListUser  extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $listUser = ModelsListUser::all();
@@ -26,17 +23,6 @@ class ListUser  extends Controller
         );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
@@ -45,19 +31,19 @@ class ListUser  extends Controller
                 'gender' => 'required',
                 'birthday' => 'required',
                 'email' => 'required',
-                'password' => 'required',
+                // 'password' => 'required|min:6',
                 'phone' => 'required',
                 'role' =>  'required',
             ]);
-            if ($request->gender === 'Nan') {
+            if ($request->gender === 'Nam') {
                 $gender = 0;
             } elseif ($request->gender === 'Nữ') {
                 $gender = 1;
             } else {
                 $gender = 2;
             }
-            if ($request->role === 'Khách hàng') {
-                $role = 0;
+            if ($request->role === 'Admin') {
+                $role = 2;
             } elseif ($request->role === 'Nhân viên') {
                 $role = 1;
             } else {
@@ -68,7 +54,6 @@ class ListUser  extends Controller
                 'name' => $request->name,
                 'gender' => $gender,
                 'birthday' => $formattedBirthday,
-                // 'birthday' => $request->birthday,
                 'email' => $request->email,
                 'password' => Hash::make($request->password),
                 'phone' => $request->phone,
@@ -85,17 +70,14 @@ class ListUser  extends Controller
                 'message' => 'Validation error',
                 'errors' => $e->errors(),
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
-        } 
-        // catch (\Exception $e) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Invalid  format: ',
-        //     ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        // }
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e,
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         $listUser = ModelsListUser::find($id);
@@ -111,17 +93,6 @@ class ListUser  extends Controller
         );
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, string $id)
     {
         try {
@@ -134,21 +105,37 @@ class ListUser  extends Controller
             }
             $request->validate([
                 'name' => 'required',
-                // 'gender' => 'required',
+                'gender' => 'required',
                 'birthday' => 'required',
-                'email' => 'required|min:6|max:20',
-                'password' => 'required',
-                // 'phone' => 'required',
-                'role' =>  Rule::in([0, 1, 2]),
+                'email' => 'required',
+                // 'password' => 'required|min:6|max:20',
+                'phone' => 'required',
+                'role' =>  'required',
             ]);
-
+            if ($request->gender === 'Nam') {
+                $gender = 0;
+            } elseif ($request->gender === 'Nữ') {
+                $gender = 1;
+            } else {
+                $gender = 2;
+            }
+            if ($request->role === 'Admin') {
+                $role = 2;
+            } elseif ($request->role === 'Nhân viên') {
+                $role = 1;
+            } else {
+                $role = 0;
+            }
+            $formattedBirthday = Carbon::createFromFormat('d/m/Y', $request->birthday)->format('Y-m-d');
             $listUser->name = $request->name;
-            $listUser->gender = $request->gender;
-            $listUser->birthday = $request->birthday;
+            $listUser->gender = $gender;
+            $listUser->birthday = $formattedBirthday;
             $listUser->email = $request->email;
             $listUser->password = Hash::make($request->password);
             $listUser->phone = $request->phone;
-            $listUser->role = $request->role;
+            $listUser->role = $role;
+            $listUser->level = $request->level;
+
             $listUser->save();
 
             return response()->json(
@@ -164,14 +151,11 @@ class ListUser  extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => false,
-                'message' => 'Something went wrong',
+                'message' => $e,
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $listUser = ModelsListUser::find($id);

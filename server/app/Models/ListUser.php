@@ -23,7 +23,20 @@ class ListUser extends Model
         'password',
         'phone',
         'role',
-
+        'level'
     ];
-  
+    public function session()
+    {
+        return $this->hasMany(SessionUser::class, 'user_id');
+    }
+
+    public function tickets()
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function movieReviews()
+    {
+        return $this->hasMany(MovieReview::class);
+    }
 }

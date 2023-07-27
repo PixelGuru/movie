@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -21,7 +22,7 @@ class MovieResource extends JsonResource
         } else {
             $movieStatusText = 'Coming Soon';
         }
-
+        $releaseDate = Carbon::createFromFormat('Y-m-d', $this->release_date)->format('d/m/Y');
 
         return [
             'id' => $this->id,
@@ -30,7 +31,7 @@ class MovieResource extends JsonResource
             'duration' => $this->duration,
             'actors' => $this->actors,
             'director' => $this->director,
-            'release_date'=>$this->release_date,
+            'release_date' => $releaseDate,
             'content' => $this->content,
             'posters' => $this->posters,
             'status' => $movieStatusText,

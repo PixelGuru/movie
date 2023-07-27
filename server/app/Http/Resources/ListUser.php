@@ -16,8 +16,6 @@ class ListUser extends JsonResource
      */
     public function toArray(Request $request)
     {
-      
-
         $roles = [
             0 => 'Khách hàng',
             1 => 'Nhân viên',
@@ -33,8 +31,6 @@ class ListUser extends JsonResource
 
         ];
         $genderText = isset($genders[$this->gender]) ? $genders[$this->gender] : 'N/A';
-
-   
         
         $birthdayDate = Carbon::createFromFormat('Y-m-d', $this->birthday)->format('d/m/Y');
 
@@ -44,9 +40,10 @@ class ListUser extends JsonResource
             'gender' => $genderText,
             'birthday' =>   $birthdayDate, 
             'email' => $this->email,
-            'password' => $this->password,
+            // 'password' => $this->password,
             'phone' => $this->phone,
             'role' =>  $roleText,
+            'level' =>  $this->level,
             'created_at' => $this->created_at->format('d/m/Y'),
             'updated_at' => $this->updated_at->format('d/m/Y')
         ];

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MovieResource;
 use App\Models\Movie;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
@@ -42,20 +43,42 @@ class MovieController extends Controller
                 'actors' => 'required',
                 'director' => 'required',
                 'content' => 'required',
-                'status' => Rule::in([0, 1, 2]),
+                'posters' => 'required|image|mimes:jpeg,png,gif,jpg|max:2048', // Thay 2048 bằng dung lượng tối đa cho phép (tính bằng KB)
+                'status' => 'required',
             ]);
+            $fileName = null;
+            if ($request->hasFile('posters')) {
+                $file = $request->file('posters');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $request->file('posters')->move(public_path('images'), $filename);
+            }
+            dd($fileName);
+            if ($request->status === 'Hide') {
+                $status = 0;
+            } elseif ($request->role === 'Show') {
+                $status = 1;
+            } else {
+                $status = 2;
+            }
+       
+            $releaseDate = Carbon::createFromFormat('d/m/Y', $request->release_date)->format('Y-m-d');
             $movie = Movie::create([
                 'name' => $request->name,
                 'genre' => $request->genre,
                 'duration' => $request->duration,
-                'release_date' => $request->release_date,
+                'release_date' => $releaseDate,
                 'actors' => $request->actors,
                 'director' => $request->director,
                 'content' => $request->content,
-                'status' => $request->status,
+                'status' => $status,
+                'posters' =>  $fileName
             ]);
             return response()->json(
-                new MovieResource($movie),
+                [
+                    'status' => true,
+                    'message' => 'Movie created successfully!',
+                    'data' => new MovieResource($movie),
+                ],
                 Response::HTTP_OK
             );
         } catch (ValidationException $e) {
@@ -122,10 +145,16 @@ class MovieController extends Controller
                     'actors' => 'required',
                     'director' => 'required',
                     'content' => 'required',
+                    // 'posters' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
                     'status' => Rule::in(['Hide', 'Show', 'Coming Soon']),
                 ]);
-
-
+                $fileName = null;
+                if ($request->hasFile('posters')) {
+                    $file = $request->file('posters');
+                    $filename = time() . '_' . $file->getClientOriginalName();
+                    $request->file('posters')->move(public_path('images'), $filename);
+                }
+                dd($fileName);
                 if ($data['status'] === 'Hide') {
                     $data['status'] = 0;
                 } elseif ($data['status'] === 'Show') {
@@ -133,13 +162,15 @@ class MovieController extends Controller
                 } else {
                     $data['status'] = 2;
                 }
-                // dd($data);
+                $releaseDate = Carbon::createFromFormat('d/m/Y', $request->release_date)->format('Y-m-d');
                 $movie->name = $data['name'];
                 $movie->genre = $data['genre'];
                 $movie->duration = $data['duration'];
+                $movie->release_date = $releaseDate;
                 $movie->actors = $data['actors'];
                 $movie->director = $data['director'];
                 $movie->content = $data['content'];
+                $movie->posters = $data['posters'];
                 $movie->status = $data['status'];
                 $movie->save();
                 return response()->json(
