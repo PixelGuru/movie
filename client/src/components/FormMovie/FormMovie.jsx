@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { Button, Spin } from "antd"; // Import Spin component from Ant Design
-import SearchAdmin from "../SearchBox/SearchAdmin";
+import { Button, Spin } from "antd";
 import TableMovie from "./TableMovie";
 import { useEffect, useState } from "react";
 import ModalMovie from "./ModalMovie";
@@ -22,6 +21,7 @@ const FormMovie = () => {
   const [dataSource, setDataSource] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [posterFile, setPosterFile] = useState(null);
 
   const onCreate = () => {
     setOpen(true);
@@ -43,7 +43,7 @@ const FormMovie = () => {
     setLoading(true);
     if (id) {
       axios.put(`http://127.0.0.1:8000/api/movies/${id}`, data).then((res) => {
-        console.log(data);
+        setPosterFile(null); // Reset state của file ảnh sau khi submit thành công
         setFormData(DEFAULT_MOVIE);
         fetchData();
         setOpen(false);
@@ -51,6 +51,7 @@ const FormMovie = () => {
       });
     } else {
       axios.post("http://127.0.0.1:8000/api/movies", data).then((res) => {
+        setPosterFile(null); // Reset state của file ảnh sau khi submit thành công
         setFormData(DEFAULT_MOVIE);
         setOpen(false);
         fetchData();
@@ -69,11 +70,27 @@ const FormMovie = () => {
 
   const onEdit = (id) => {
     setLoading(true);
-    axios.get(`http://127.0.0.1:8000/api/movies/${id}`).then((res) => {
-      setFormData(res.data.data);
-      setOpen(true);
-      setLoading(false);
-    });
+    axios
+      .get(`http://127.0.0.1:8000/api/movies/${id}`)
+      .then((res) => {
+        setFormData(res.data.data);
+        setPosterFile(null); // Reset state của file ảnh trước khi mở modal
+        setOpen(true);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching movie data:", error);
+        setLoading(false);
+      });
+  };
+
+  const handleFileChange = (e) => {
+    const fileInput = e.target;
+    const files = fileInput.files;
+    if (files.length > 0) {
+      const file = files[0];
+      setPosterFile(file); // Set giá trị của posterFile thành file ảnh mới
+    }
   };
 
   return (
@@ -81,7 +98,6 @@ const FormMovie = () => {
       <div>
         <Button onClick={onCreate}>New Movie</Button>
       </div>
-      {/* Display the Spin component when loading is true */}
       {loading ? (
         <Spin size="large" tip="Loading...">
           <TableMovie
@@ -104,6 +120,9 @@ const FormMovie = () => {
         onSubmit={onSubmit}
         formData={formData}
         setFormData={setFormData}
+        posterFile={posterFile}
+        setPosterFile={setPosterFile}
+        handleFileChange={handleFileChange}
       />
     </div>
   );

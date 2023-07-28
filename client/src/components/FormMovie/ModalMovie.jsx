@@ -1,24 +1,44 @@
+// ModalMovie.js
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { DatePicker, Form, Input, InputNumber, Modal, Select } from "antd";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Select,
+  Upload,
+  message,
+} from "antd";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import TextArea from "antd/es/input/TextArea";
+import { UploadOutlined } from "@ant-design/icons";
 
-const ModalMovie = ({ open, setOpen, onSubmit, formData, setFormData }) => {
+const ModalMovie = ({
+  open,
+  setOpen,
+  onSubmit,
+  formData,
+  setFormData,
+  posterFile,
+  setPosterFile,
+}) => {
   const [form] = Form.useForm();
   const { Option } = Select;
 
   useEffect(() => {
     if (!open) {
       setFormData("");
+      setPosterFile(null); // Reset state của file ảnh khi đóng modal
     }
   }, [open]);
 
   useEffect(() => {
     if (open && formData.id) {
+      console.log(formData);
       const formattedData = {
         ...formData,
         release_date: formData.release_date
@@ -34,15 +54,33 @@ const ModalMovie = ({ open, setOpen, onSubmit, formData, setFormData }) => {
     setOpen(false);
   };
   const onOk = async () => {
-    const values = await form.validateFields();
-    values.release_date = values.release_date.format("DD/MM/YYYY");
-    onSubmit(formData.id, values);
-    form.resetFields();
-    console.log(values);
+    if (formData.id) {
+      const values = await form.validateFields();
+      values.release_date = values.release_date.format("DD/MM/YYYY");
+      onSubmit(formData.id, values);
+      form.resetFields();
+    } else {
+      try {
+        const values = await form.validateFields();
+        values.release_date = values.release_date.format("DD/MM/YYYY");
+        const newFormData = new FormData();
+        newFormData.append("name", values.name);
+        newFormData.append("genre", values.genre);
+        newFormData.append("duration", values.duration);
+        newFormData.append("release_date", values.release_date);
+        newFormData.append("actors", values.actors);
+        newFormData.append("content", values.content);
+        newFormData.append("director", values.director);
+        newFormData.append("status", values.status);
+        newFormData.append("posters", posterFile);
+        console.log(newFormData);
+        onSubmit(false, newFormData);
+      } catch (error) {
+        console.error("Validation failed:", error);
+      }
+    }
   };
-  const onEditorChange = (evt) => {
-    console.log(evt.editor.getData());
-  };
+
   const onDatePickerChange = (date) => {
     if (date) {
       const formattedDate = date.format("DD/MM/YYYY");
@@ -59,7 +97,7 @@ const ModalMovie = ({ open, setOpen, onSubmit, formData, setFormData }) => {
       onCancel={onCancel}
       style={{ top: 20 }}
     >
-      <Form form={form} onOk={onOk} onCancel={onCancel} layout="vertical">
+      <Form form={form} layout="vertical">
         <Form.Item
           name="name"
           label="Name"
@@ -73,11 +111,6 @@ const ModalMovie = ({ open, setOpen, onSubmit, formData, setFormData }) => {
           label="Genre"
           rules={[{ required: true, message: "Select Genre" }]}
         >
-          {/* <Select mode="multiple">
-            <Option value="red">Red</Option>
-            <Option value="green">Green</Option>
-            <Option value="blue">Blue</Option>
-          </Select> */}
           <Input />
         </Form.Item>
 
@@ -91,6 +124,7 @@ const ModalMovie = ({ open, setOpen, onSubmit, formData, setFormData }) => {
         >
           <InputNumber style={{ width: 200 }} />
         </Form.Item>
+
         <Form.Item
           name="release_date"
           label="Release Date"
@@ -126,6 +160,7 @@ const ModalMovie = ({ open, setOpen, onSubmit, formData, setFormData }) => {
         >
           <TextArea rows={6} />
         </Form.Item>
+
         <Form.Item
           name="status"
           label="Status"
@@ -138,6 +173,30 @@ const ModalMovie = ({ open, setOpen, onSubmit, formData, setFormData }) => {
               { value: "Coming Soon", label: "Coming Soon" },
             ]}
           />
+        </Form.Item>
+        <Form.Item name="posters" label="Posters">
+          <div>
+            <img src={formData.posters} alt="" width={250} />
+          </div>
+          <div>
+            {posterFile ? (
+              <img
+                src={URL.createObjectURL(posterFile)}
+                alt="Poster Preview"
+                style={{ width: 250 }}
+              />
+            ) : null}
+          </div>
+          <Upload
+            showUploadList={false}
+            accept="image/*"
+            beforeUpload={(file) => {
+              setPosterFile(file); // Lưu trữ file ảnh khi chọn từ dialog
+              return false; // Ngăn việc tự động upload
+            }}
+          >
+            <Button icon={<UploadOutlined />}>Select Poster</Button>
+          </Upload>
         </Form.Item>
       </Form>
     </Modal>
