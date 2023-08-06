@@ -10,6 +10,7 @@ import {
   TimePicker,
 } from "antd";
 import dayjs from "dayjs";
+import moment from "moment";
 import { useEffect } from "react";
 
 const ModalScreeningHCM = ({
@@ -61,6 +62,10 @@ const ModalScreeningHCM = ({
       console.log("Ngày được chọn:", formattedDate);
     }
   };
+  const disabledDate = (current) => {
+    const today = moment().startOf("day");
+    return current && current < today;
+  };
   return (
     <Modal open={open} onOk={onOk} onCancel={onCancel}>
       <Form form={form} layout="vertical">
@@ -95,7 +100,11 @@ const ModalScreeningHCM = ({
             label="Date Show "
             rules={[{ required: true, message: "Enter date show" }]}
           >
-            <DatePicker format={"DD/MM/YYYY"} onChange={onDatePickerChange} />
+            <DatePicker
+              format={"DD/MM/YYYY"}
+              disabledDate={disabledDate}
+              onChange={onDatePickerChange}
+            />
           </Form.Item>
           <Form.Item
             name="start_time"

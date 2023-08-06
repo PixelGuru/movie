@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ModalScreeningHCM from "./ModalScreeningHCM";
 import axios from "axios";
 import TableScreeningHCM from "./TableScreeningHCM";
+import moment from "moment";
 
 const DEFAULT_SCREENING = {
   cinema_name: "",
@@ -87,6 +88,9 @@ const FormScreenings = () => {
       setLoading(false);
     });
   };
+
+
+
   return (
     <div>
       <Button onClick={onCreate}>New Screening</Button>

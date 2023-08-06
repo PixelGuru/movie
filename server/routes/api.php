@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\V1\Admin\ListUser;
 use App\Http\Controllers\API\V1\Admin\MovieController;
 use App\Http\Controllers\API\V1\Admin\ScreeningController;
@@ -51,6 +52,10 @@ Route::resource('screenings', ScreeningController::class);
 Route::get('/screenings/{id}/seats', [SeatController::class, 'index']);
 Route::post('/screenings/{id}/book', [SeatController::class, 'book']);
 Route::post('/bookings', [TicketController::class, 'Booking']);
+
+Route::post('/create-payment', [PaymentController::class, 'createPayment'])->name('payment.create');
+Route::get('/payment/return', [PaymentController::class, 'handleReturn'])->name('payment.return');
+
 
 Route::get('/movie/show', [ClientController::class, 'showMovie']);
 Route::get('/show-time/ho-chi-minh', [ClientController::class, 'showTimeHoChiMinh']);

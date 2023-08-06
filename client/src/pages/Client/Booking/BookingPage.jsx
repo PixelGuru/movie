@@ -63,6 +63,7 @@ const BookingPage = () => {
   useEffect(() => {
     axios.get(`http://127.0.0.1:8000/api/movies/${movie_id}`).then((res) => {
       setMovieInfo(res.data.data);
+      console.log(movieInfo);
     });
   }, []);
 
@@ -71,11 +72,12 @@ const BookingPage = () => {
       .get(`http://127.0.0.1:8000/api/screenings/${screeningId}`)
       .then((response) => {
         const data = response.data;
-        console.log(data)
+        console.log(data);
+
         const totalSeats = data.data.total_seat;
         setRemainingSeats(data.data.remaining_seats);
         setTimeShow(data.data.start_time);
-        setTicketPrice(data.data.price)
+        setTicketPrice(data.data.price);
         const numRows = Math.ceil(totalSeats / 10);
         setRows(numRows);
         setColumns(10);
@@ -101,8 +103,16 @@ const BookingPage = () => {
       setSelectedSeats((prevSeats) => [...prevSeats, seat]);
     }
   };
-  const onBooking = () => {
-    navigate(`/booking-detail/${movie_id}/${screeningId}`);
+  const onBooking = async () => {
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/create-payment",
+        { totalPrice }
+      );
+      window.location.href = response.data.redirect_url;
+    } catch (error) {
+      message.error("Đã có lỗi xảy tra trong quá trình thanh toán");
+    }
   };
   const calculateTotalPrice = () => {
     const numberOfSeats = selectedSeats.length;
@@ -194,7 +204,9 @@ const BookingPage = () => {
                   background: "#1E90FF",
                   border: "1px solid",
                   borderRadius: "8px",
-                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 Ghế Thường
@@ -208,7 +220,9 @@ const BookingPage = () => {
                   background: "#FF0000",
                   border: "1px solid",
                   borderRadius: "8px",
-                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 Ghế Vip
@@ -222,7 +236,9 @@ const BookingPage = () => {
                   background: "#E00D7A",
                   border: "1px solid",
                   borderRadius: "8px",
-                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
                 Đang chọn
@@ -233,32 +249,21 @@ const BookingPage = () => {
                 style={{
                   width: 55,
                   height: 55,
+                  color: "#000",
                   background: "#ccc",
                   border: "1px solid",
                   borderRadius: "8px",
                   textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                Đã chọn
+                Đã đặt
               </div>
             </StyleLi>
           </ul>
         </div>
-        <div style={{ color: "#fff" }}> aaaaa</div>
-        <Space size={20}>
-          <BookingButton
-            onClick={onBooking}
-            disabled={selectedSeats.length === 0}
-          >
-            Đặt vé
-          </BookingButton>
-          <Link
-            style={{ color: "#fff", textDecoration: "none" }}
-            to="/show-time/ho-chi-minh"
-          >
-            Quay lại
-          </Link>
-        </Space>
       </BookingContainer>
       <div
         style={{
@@ -267,16 +272,21 @@ const BookingPage = () => {
       >
         <div>
           <h2>Thời gian giữ ghế: {formatTime(countdown)}</h2>
-          <div>Tổng giá: {totalPrice} đ</div>
-          <div>Thanh toán: </div>
-          <Radio.Group style={{ color: "#fff" }}>
-            <Space direction="vertical">
-              <Radio value={1}>Option A</Radio>
-              <Radio value={2}>Option B</Radio>
-              <Radio value={3}>Option C</Radio>
-            </Space>
-          </Radio.Group>
-          <Link to=''>Thanh toán</Link>
+          <h1 style={{ margin: "150px 0 20px" }}>Tổng giá: {totalPrice} VNĐ</h1>
+          <Space size={20}>
+            <BookingButton
+              onClick={onBooking}
+              disabled={selectedSeats.length === 0}
+            >
+              Đặt vé
+            </BookingButton>
+            <Link
+              style={{ color: "#fff", textDecoration: "none" }}
+              to="/show-time/ho-chi-minh"
+            >
+              Quay lại
+            </Link>
+          </Space>
         </div>
       </div>
     </AreaBooking>

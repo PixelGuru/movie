@@ -1,97 +1,36 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const App = () => {
-  const [ticketId, setTicketId] = useState('');
-  const [quantity, setQuantity] = useState(1);
-  const [paymentMethod, setPaymentMethod] = useState('credit_card');
-  const [orderId, setOrderId] = useState('');
-  const [transactionId, setTransactionId] = useState('');
-  const [message, setMessage] = useState('');
-
-  const handleOrder = async () => {
-    try {
-      const response = await axios.post(`/api/tickets/${ticketId}/order`, {
-        quantity: quantity,
-      });
-      if (response.data.status === 'success') {
-        setOrderId(response.data.order.id);
-        setMessage('Order created successfully.');
-      } else {
-        setMessage('Failed to create order.');
-      }
-    } catch (error) {
-      setMessage('Error creating order.');
-    }
-  };
+const Payment = () => {
+  const [amount, setAmount] = useState(100000); // Số tiền thanh toán mặc định
 
   const handlePayment = async () => {
     try {
-      const response = await axios.post(`/api/orders/${orderId}/payment`, {
-        payment_method: paymentMethod,
-      });
-      if (response.data.status === 'success') {
-        setTransactionId(response.data.transaction.transaction_id);
-        setMessage('Payment processed successfully.');
-      } else {
-        setMessage('Failed to process payment.');
-      }
-    } catch (error) {
-      setMessage('Error processing payment.');
-    }
-  };
+      // Gửi yêu cầu tạo mã redirect đến API thanh toán trong Laravel
+      const response = await axios.post('http://127.0.0.1:8000/api/create-payment', { amount });
 
-  const handleConfirmPayment = async () => {
-    try {
-      const response = await axios.post('/api/payment/confirm', {
-        transaction_id: transactionId,
-      });
-      if (response.data.status === 'success') {
-        setMessage('Payment confirmed successfully.');
-      } else {
-        setMessage('Failed to confirm payment.');
-      }
+      // Chuyển hướng khách hàng đến cổng thanh toán VNPAY
+      window.location.href = response.data.redirect_url;
+      console.log(response)
     } catch (error) {
-      setMessage('Error confirming payment.');
+      // Xử lý lỗi nếu có
+      console.error(error);
     }
   };
 
   return (
     <div>
-      <h1>Movie Ticket Booking</h1>
+      <h1>Thanh toán VNPAY</h1>
       <div>
-        <label>Ticket ID:</label>
-        <input type="text" value={ticketId} onChange={(e) => setTicketId(e.target.value)} />
+        <input
+          type="number"
+          value={amount}
+          onChange={(e) => setAmount(e.target.value)}
+        />
       </div>
-      <div>
-        <label>Quantity:</label>
-        <input type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-      </div>
-      <div>
-        <button onClick={handleOrder}>Order Ticket</button>
-      </div>
-      <div>
-        <label>Payment Method:</label>
-        <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-          <option value="credit_card">Credit Card</option>
-          <option value="paypal">PayPal</option>
-        </select>
-      </div>
-      <div>
-        <button onClick={handlePayment}>Process Payment</button>
-      </div>
-      {transactionId && (
-        <div>
-          <label>Transaction ID:</label>
-          <span>{transactionId}</span>
-        </div>
-      )}
-      <div>
-        <button onClick={handleConfirmPayment}>Confirm Payment</button>
-      </div>
-      {message && <div>{message}</div>}
+      <button onClick={handlePayment}>Thanh toán</button>
     </div>
   );
 };
 
-export default App;
+export default Payment;

@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import TextArea from "antd/es/input/TextArea";
 import { UploadOutlined } from "@ant-design/icons";
+import moment from "moment";
 
 const ModalMovie = ({
   open,
@@ -88,7 +89,16 @@ const ModalMovie = ({
       console.log("Ngày được chọn:", formattedDate);
     }
   };
-
+  const disabledDate = (current) => {
+    const today = moment().startOf("day");
+    return current && current < today;
+  };
+  const validateDuration = (_, value) => {
+    if (value < 60 || value > 180) {
+      return Promise.reject("Duration must be between 60 and 180 minutes");
+    }
+    return Promise.resolve();
+  };
   return (
     <Modal
       width={1000}
@@ -128,10 +138,10 @@ const ModalMovie = ({
           label="Duration"
           rules={[
             { required: true, message: "Enter Duration" },
-            { type: "integer" },
+            { validator: validateDuration },
           ]}
         >
-          <InputNumber style={{ width: 200 }} />
+          <InputNumber style={{ width: 200 }} /> 
         </Form.Item>
 
         <Form.Item
@@ -140,6 +150,7 @@ const ModalMovie = ({
           rules={[{ required: true, message: "Enter Release Date" }]}
         >
           <DatePicker
+            disabledDate={disabledDate}
             style={{ width: "50%" }}
             format={"DD/MM/YYYY"}
             onChange={onDatePickerChange}
