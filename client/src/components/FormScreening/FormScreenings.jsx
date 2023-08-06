@@ -6,18 +6,22 @@ import axios from "axios";
 import TableScreeningHCM from "./TableScreeningHCM";
 
 const DEFAULT_SCREENING = {
+  cinema_name: "",
   movie_name: "",
   date_show: "",
   start_time: "",
   end_time: "",
   price: "",
+  room: "",
   remaining_seats: "",
 };
-const HoChiMinh = () => {
+const FormScreenings = () => {
   const [formData, setFormData] = useState(DEFAULT_SCREENING);
   const [dataSource, setDataSource] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [cinemaNames, setCinemaNames] = useState([]);
+  const [movieNames, setMovieNames] = useState([]);
 
   const onCreate = () => {
     setOpen(true);
@@ -29,8 +33,17 @@ const HoChiMinh = () => {
 
   const fetchData = () => {
     setLoading(true);
-    axios.get("http://127.0.0.1:8000/api/screeningHCM").then((res) => {
+    axios.get("http://127.0.0.1:8000/api/screenings").then((res) => {
       setDataSource(res.data.data);
+      const data = res.data.data;
+      const uniqueCinemaNames = [
+        ...new Set(data.map((item) => item.cinema_name)),
+      ];
+      const uniqueMovieNames = [
+        ...new Set(data.map((item) => item.movie_name)),
+      ];
+      setCinemaNames(uniqueCinemaNames);
+      setMovieNames(uniqueMovieNames);
       setLoading(false);
     });
   };
@@ -40,7 +53,7 @@ const HoChiMinh = () => {
   }, []);
   const onEdit = (id) => {
     setLoading(true);
-    axios.get(`http://127.0.0.1:8000/api/screeningHCM/${id}`).then((res) => {
+    axios.get(`http://127.0.0.1:8000/api/screenings/${id}`).then((res) => {
       setFormData(res.data.data);
       setOpen(true);
       setLoading(false);
@@ -49,15 +62,17 @@ const HoChiMinh = () => {
   const onSubmit = (id, data) => {
     setLoading(true);
     if (id) {
-      axios.put(`http://127.0.0.1:8000/api/screeningHCMs/${id}`, data).then((res) => {
-        console.log(data);
-        setFormData(DEFAULT_SCREENING);
-        fetchData();
-        setOpen(false);
-        setLoading(false);
-      });
+      axios
+        .put(`http://127.0.0.1:8000/api/screenings/${id}`, data)
+        .then((res) => {
+          console.log(data);
+          setFormData(DEFAULT_SCREENING);
+          fetchData();
+          setOpen(false);
+          setLoading(false);
+        });
     } else {
-      axios.post("http://127.0.0.1:8000/api/screeningHCM", data).then((res) => {
+      axios.post("http://127.0.0.1:8000/api/screenings", data).then((res) => {
         setFormData(DEFAULT_SCREENING);
         setOpen(false);
         fetchData();
@@ -67,7 +82,7 @@ const HoChiMinh = () => {
   };
   const onDelete = (id) => {
     setLoading(true);
-    axios.delete(`http://127.0.0.1:8000/api/screeningHCM/${id}`).then((res) => {
+    axios.delete(`http://127.0.0.1:8000/api/screenings/${id}`).then((res) => {
       fetchData();
       setLoading(false);
     });
@@ -93,6 +108,8 @@ const HoChiMinh = () => {
       <ModalScreeningHCM
         open={open}
         setOpen={setOpen}
+        cinemaNames={cinemaNames}
+        movieNames={movieNames}
         onCancel={onCancel}
         onSubmit={onSubmit}
         formData={formData}
@@ -101,4 +118,4 @@ const HoChiMinh = () => {
   );
 };
 
-export default HoChiMinh;
+export default FormScreenings;

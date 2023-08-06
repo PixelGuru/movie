@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('screening_id');
+            $table->string('movie_name');
+            $table->string('cinema_name');
+            $table->integer('room');
+            $table->string('seat_number');
+          
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

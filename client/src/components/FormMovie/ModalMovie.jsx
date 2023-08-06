@@ -74,6 +74,7 @@ const ModalMovie = ({
         newFormData.append("status", values.status);
         newFormData.append("posters", posterFile);
         console.log(newFormData);
+        form.resetFields();
         onSubmit(false, newFormData);
       } catch (error) {
         console.error("Validation failed:", error);
@@ -111,7 +112,15 @@ const ModalMovie = ({
           label="Genre"
           rules={[{ required: true, message: "Select Genre" }]}
         >
-          <Input />
+          <Select mode="multiple">
+            <Option value="Comedy">Comedy </Option>
+            <Option value="Crime">Crime </Option>
+            <Option value="Action">Action </Option>
+            <Option value="Adventure">Adventure </Option>
+            <Option value="Mystery">Mystery </Option>
+            <Option value="Horror">Horror </Option>
+            <Option value="Romance">Romance </Option>
+          </Select>
         </Form.Item>
 
         <Form.Item

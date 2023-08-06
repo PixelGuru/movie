@@ -10,7 +10,7 @@ export const LayoutPublic = styled.div`
 `;
 export const Bgbody = styled.div`
     background-image: url(${BGTop});
-    // height: 100vh;
+
 `;
 export const Header = styled.div`
     display: grid;
@@ -19,7 +19,7 @@ export const Header = styled.div`
         "logo auth search"
         "logo nav nav";
     height: auto;
-    // padding: 0 7rem;
+   
     text-align: center;
 `;
 export const Logo = styled.div`

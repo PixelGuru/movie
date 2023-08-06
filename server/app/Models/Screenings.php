@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Screenings extends Model
 {
     use HasFactory;
-    protected $fillable = ['movie_id', 'cinema_id', 'cinema_branch_id', 'date_show', 'start_time', 'end_time', 'price', 'remaining_seats'];
+    protected $fillable = ['movie_id', 'cinema_id', 'cinema_branch_id', 'date_show', 'start_time', 'end_time', 'price', 'room','seat', 'remaining_seats'];
 
     public function movie()
     {

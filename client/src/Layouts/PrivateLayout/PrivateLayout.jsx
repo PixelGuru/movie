@@ -64,19 +64,11 @@ const PrivateLayout = () => {
               label: <Link to="admin/movie">Movie</Link>,
             },
             {
+              key: "4",
               icon: <VideoCameraOutlined />,
-              label: "Screening Show",
-              children: [
-                {
-                  key: "4",
-                  label: <Link to="/admin/screening/HoChiMinh">Ho Chi Minh</Link>,
-                },
-                {
-                  key: "5",
-                  label: <Link to="/admin/screening/DaNang">Da Nang</Link>,
-                },
-              ],
+              label: <Link to="admin/screenings">Screenings</Link>,
             },
+           
             {
               key: "6",
               icon: <BookOutlined />,

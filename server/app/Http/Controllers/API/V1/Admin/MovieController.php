@@ -1,21 +1,18 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\V1\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\MovieResource;
 use App\Models\Movie;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class MovieController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         $movie = Movie::all();
@@ -29,9 +26,6 @@ class MovieController extends Controller
         );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
@@ -43,16 +37,9 @@ class MovieController extends Controller
                 'actors' => 'required',
                 'director' => 'required',
                 'content' => 'required',
-                'posters' => 'required|image|mimes:jpeg,png,gif,jpg|max:2048', // Thay 2048 bằng dung lượng tối đa cho phép (tính bằng KB)
+                'posters' => 'required|image|mimes:jpeg,png,gif,jpg|max:2048',
                 'status' => 'required',
             ]);
-            // if ($request->hasFile('posters')) {
-            //     $originName = $request->file('posters')->getClientOriginalName();
-            //     $fileName = pathinfo($originName, PATHINFO_FILENAME);
-            //     $extension = $request->file('posters')->getClientOriginalExtension();
-            //     $fileName = $fileName . '_' . time() . '.' . $extension;
-            //     $request->file('posters')->move(public_path('images'), $fileName);
-            // }
             $fileName = null;
             if ($request->hasFile('posters')) {
                 $file = $request->file('posters');
@@ -103,9 +90,6 @@ class MovieController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         $movie = Movie::find($id);
@@ -129,12 +113,6 @@ class MovieController extends Controller
         }
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     */
-    // ...
-
     public function update(Request $request, string $id)
     {
         $movie = Movie::find($id);
@@ -157,21 +135,17 @@ class MovieController extends Controller
                 'content' => 'required',
                 'status' => Rule::in(['Hide', 'Show', 'Coming Soon']),
             ]);
-
-            $fileName = $request->posters;  
+            $fileName = $request->posters;
             if ($request->hasFile('posters')) {
                 $originName = $request->file('posters')->getClientOriginalName();
                 $fileName = pathinfo($originName, PATHINFO_FILENAME);
                 $extension = $request->file('posters')->getClientOriginalExtension();
                 $fileName = $fileName . '_' . time() . '.' . $extension;
                 $request->file('posters')->move(public_path('images'), $fileName);
-
-                //Remove old image
                 if (!is_null($request->posters) && file_exists("images/" . $request->posters)) {
                     unlink("images/" . $request->posters);
                 }
             };
-
             if ($request->status === 'Hide') {
                 $status = 0;
             } elseif ($request->status === 'Show') {
@@ -179,7 +153,6 @@ class MovieController extends Controller
             } else {
                 $status = 2;
             }
-
             $releaseDate = Carbon::createFromFormat('d/m/Y', $request->release_date)->format('Y-m-d');
             $movie->name = $request->name;
             $movie->genre = $request->genre;
@@ -190,7 +163,6 @@ class MovieController extends Controller
             $movie->content = $request->content;
             $movie->status = $status;
             $movie->save();
-
             return response()->json(
                 [
                     'status' => true,
@@ -219,24 +191,24 @@ class MovieController extends Controller
         }
     }
 
-    // ...
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         $movie = Movie::find($id);
         if (!$movie) {
-            return response()->json([
-                'message' =>  'Movie not found',
-            ], Response::HTTP_NOT_FOUND);
+            return response()->json(
+                [
+                    'message' =>  'Movie not found',
+                ],
+                Response::HTTP_NOT_FOUND
+            );
         }
         $movie->delete();
-        return response()->json([
-            'status' => true,
-            'message' => 'Delete movie success'
-        ], Response::HTTP_OK);
+        return response()->json(
+            [
+                'status' => true,
+                'message' => 'Delete movie success'
+            ],
+            Response::HTTP_OK
+        );
     }
 }

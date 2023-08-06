@@ -33,6 +33,7 @@ class ScreeningsFactory extends Factory
             'start_time' => fake()->Time(),
             'end_time' => fake()->Time(),
             'price' => fake()->numberBetween(60000, 120000),
+            'room' => fake()->numberBetween(1, 5),
             'remaining_seats' => fake()->numberBetween(0 , 60)
         ];
     }

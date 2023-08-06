@@ -1,25 +1,44 @@
-import { Button, Modal } from 'antd';
-import { useState } from 'react';
-const ModelInfoUser = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const showModal = () => {
-    setIsModalOpen(true);
+/* eslint-disable react/prop-types */
+/* eslint-disable no-unused-vars */
+import { Modal } from "antd";
+import { useStateContext } from "../../../Contexts/ContextProvider";
+
+const ModelInfoUser = ({ open, setOpen, userData }) => {
+  const { user } = useStateContext();
+  // console.log(user);
+  const onCancel = () => {
+    setOpen(false);
   };
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
+
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        Open Modal
-      </Button>
-      <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+      <Modal
+        title="Thông tin thành viên"
+        open={open}
+        setOpen={setOpen}
+        onCancel={onCancel}
+      >
+        <div style={{ fontSize: 17 }}>
+          <div>
+            <b>Họ và tên: </b>
+            {user?.name}
+          </div>
+          <div>
+            <b>Giới tính:</b> {user?.gender}
+          </div>
+          <div>
+            <b>Ngày sinh:</b> {user?.birthday}
+          </div>
+          <div>
+            <b>Email:</b> {user?.email}
+          </div>
+          <div>
+            <b>Số điện thoại:</b> {user?.phone}
+          </div>
+          <div>
+            <b>Hạng:</b> {user?.level}
+          </div>
+        </div>
       </Modal>
     </>
   );

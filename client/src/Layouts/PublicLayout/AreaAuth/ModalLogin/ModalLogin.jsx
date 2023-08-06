@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { ButtonLogin, StyleModal } from "./styled";
-import Login from "./Login";
+import LoginMember from "./LoginMember";
 const ModalLogin = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [open, setOpen] = useState(false);
     const showModal = () => {
-        setIsModalOpen(true);
+        setOpen(true);
     };
  
     const handleCancel = () => {
-        setIsModalOpen(false);
+        setOpen(false);
     };
     return (
         <>
@@ -17,11 +17,11 @@ const ModalLogin = () => {
             </ButtonLogin>
             <StyleModal
                 title="ĐĂNG NHẬP"
-                open={isModalOpen}
+                open={open}
                 onCancel={handleCancel}
                 width={450}
             >
-                <Login />
+                <LoginMember setOpen={setOpen} />
             </StyleModal>
         </>
     );

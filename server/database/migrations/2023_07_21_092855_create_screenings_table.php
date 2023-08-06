@@ -19,6 +19,8 @@ return new class extends Migration
             $table->dateTime('start_time');
             $table->dateTime('end_time');
             $table->decimal('price', 10, 2);
+            $table->integer('room');
+            $table->integer('total_seat');
             $table->integer('remaining_seats');
             $table->timestamps();
 

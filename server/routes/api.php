@@ -1,15 +1,13 @@
 <?php
 
-use App\Http\Controllers\CinemaBranchController;
-use App\Http\Controllers\CinemaController;
-use App\Http\Controllers\Client\ClientController;
-use App\Http\Controllers\Client\MovieController as ClientMovieController;
-use App\Http\Controllers\FoodController;
-use App\Http\Controllers\ListUser as ControllersListUser;
-use App\Http\Controllers\MovieController;
-use App\Http\Controllers\MovieReviewController;
-use App\Http\Controllers\ScreeningController;
-use App\Http\Controllers\TicketController;
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\V1\Admin\ListUser;
+use App\Http\Controllers\API\V1\Admin\MovieController;
+use App\Http\Controllers\API\V1\Admin\ScreeningController;
+use App\Http\Controllers\API\V1\Admin\SeatController;
+use App\Http\Controllers\API\V1\Admin\TicketController;
+use App\Http\Controllers\API\V1\Client\ClientController;
+use App\Models\Tickets;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,21 +22,36 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+
+Route::post('/register', [AuthController::class, 'register']);
+
+Route::post('/login', [AuthController::class, 'login']);
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/profile', function(Request $request) { 
+        return auth()->user();
+    });
 });
 
 
 
-Route::resource('listUser', ControllersListUser::class);
-Route::resource('cinema-branches', CinemaBranchController::class);
-Route::resource('cinemas', CinemaController::class);
+// Route::resource('cinema-branches', CinemaBranchController::class);
+// Route::resource('cinemas', CinemaController::class);
+
+
+// Route::resource('foods', FoodController::class);
+// Route::resource('tickets', TicketController::class);
+// Route::resource('movie-reviews', MovieReviewController::class);
+
+
+Route::resource('listUser', ListUser::class);
 Route::resource('movies', MovieController::class);
 Route::resource('screenings', ScreeningController::class);
-Route::get('screeningHCM', [ScreeningController::class, 'getScreeningHCM']);
-Route::get('screeningDN', [ScreeningController::class, 'getScreeningDN']);
-Route::resource('foods', FoodController::class);
-Route::resource('tickets', TicketController::class);
-Route::resource('movie-reviews', MovieReviewController::class);
+
+// Route::get('/screenings/{id}', [ScreeningController::class, 'show']);
+Route::get('/screenings/{id}/seats', [SeatController::class, 'index']);
+Route::post('/screenings/{id}/book', [SeatController::class, 'book']);
+Route::post('/bookings', [TicketController::class, 'Booking']);
+
 Route::get('/movie/show', [ClientController::class, 'showMovie']);
-Route::get('show-time', [ClientController::class, 'showTime']);
+Route::get('/show-time/ho-chi-minh', [ClientController::class, 'showTimeHoChiMinh']);
+

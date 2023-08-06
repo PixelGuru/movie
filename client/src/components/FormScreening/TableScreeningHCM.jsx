@@ -25,7 +25,6 @@ const TableScreeningHCM = ({ dataSource, onDelete, onEdit }) => {
   };
 
   const handleChange = (pagination, filters, sorter) => {
-    console.log("Various parameters", pagination, filters, sorter);
     setFilteredInfo(filters);
     setSortedInfo(sorter);
   };
@@ -133,6 +132,22 @@ const TableScreeningHCM = ({ dataSource, onDelete, onEdit }) => {
   });
   const columns = [
     {
+      title: "Cinema Name",
+      dataIndex: "cinema_name",
+      key: "cinema_name",
+      filters: [
+        {
+          text: "Hồ Chí Minh",
+          value: "Hồ Chí Minh",
+        },
+        {
+          text: "Đà Nẵng",
+          value: "Đà Nẵng",
+        },
+      ],
+      onFilter: (value, record) => record.cinema_name.startsWith(value),
+    },
+    {
       width: 300,
       title: "Movie Name",
       dataIndex: "movie_name",
@@ -146,19 +161,20 @@ const TableScreeningHCM = ({ dataSource, onDelete, onEdit }) => {
       ...getColumnSearchProps("date_show"),
     },
     {
-     
       title: "Start Time",
       dataIndex: "start_time",
       key: "start_time",
-      // ...getColumnSearchProps("duration"),
-      sorter: (a, b) => a.start_time - b.start_time,
-      sortDirections: ["descend", "ascend"],
     },
     {
       title: "End Time",
       dataIndex: "end_time",
       key: "end_time",
-      ...getColumnSearchProps("end_time"),
+    },
+    {
+      title: "Room",
+      dataIndex: "room",
+      key: "room",
+      sorter: (a, b) => a.room - b.room,
     },
     {
       title: "Price",
@@ -166,8 +182,8 @@ const TableScreeningHCM = ({ dataSource, onDelete, onEdit }) => {
       key: "price",
       ...getColumnSearchProps("price"),
     },
+
     {
-      width: "20%",
       title: "Remaining Seats",
       dataIndex: "remaining_seats",
       key: "remaining_seats",

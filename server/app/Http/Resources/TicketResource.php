@@ -18,6 +18,7 @@ class TicketResource extends JsonResource
             'id' => $this->id,
             'user_id' => $this->user_id,
             'screening_id' => $this->screening_id,
+            'seat_number' => implode(',', $this->seat_number),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
