@@ -61,3 +61,4 @@ Route::get('/payment-return', [PaymentController::class, 'handleReturn'])->name(
 
 Route::get('/movie/show', [ClientController::class, 'showMovie']);
 Route::get('/show-time/ho-chi-minh', [ClientController::class, 'showTimeHoChiMinh']);
+Route::get('/show-time/ho-chi-minh/booking/{screeningId}', [ClientController::class, 'getShowTimeBooking']);

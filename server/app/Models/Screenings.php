@@ -34,4 +34,8 @@ class Screenings extends Model
     {
         return $this->belongsToMany(Food::class, 'food_screening', 'screening_id', 'food_id')->withTimestamps();
     }
+    public function order()
+    {
+        return $this->hasMany(order::class, 'screening_id', 'id');
+    }
 }

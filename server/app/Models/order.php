@@ -15,6 +15,7 @@ class order extends Model
         'user_name',
         'user_email',
         'user_phone',
+        'screening_id',
         'cinema_name',
         'movie_name',
         'total_price',
@@ -24,5 +25,9 @@ class order extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function screenings()
+    {
+        return $this->belongsTo(Screenings::class);
     }
 }

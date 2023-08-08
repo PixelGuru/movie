@@ -59,6 +59,7 @@ class OrderController extends Controller
             'user_name' => $request->user_name,
             'user_email' => $request->user_email,
             'user_phone' => $request->user_phone,
+            'screening_id' => $request->screening_id,
             'cinema_name' => $request->cinema_name,
             'movie_name' => $request->movie_name,
             'selected_seats' => $request->selected_seats,

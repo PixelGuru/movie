@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 const PaymentSuccess = () => {
   const [formDataOrder, setFormDataOrder] = useState(null);
   const [dataSent, setDataSent] = useState(false);
-
+console.log(formDataOrder)
   const sendFormData = useCallback(() => {
     if (formDataOrder) {
       axios

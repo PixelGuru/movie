@@ -21,7 +21,9 @@ class OrderResource extends JsonResource
             'user_name' => $this->user_name,
             'user_email' => $this->user_email,
             'user_phone' => $this->user_phone,
+            'screening_id' => $this->screening_id,
             'movie_name' => $this->movie_name,
+            'selected_seats' => $this->selected_seats,
             'created_at' => $this->created_at->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at->format('Y-m-d H:i:s'),
         ];

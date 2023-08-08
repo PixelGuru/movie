@@ -38,8 +38,8 @@ class PaymentController extends Controller
             "vnp_ReturnUrl" => $vnp_ReturnUrl,
             'vnp_TxnRef' => $order_id,
             "vnp_ExpireDate" => $expire,
-
         );
+        $orderData = $request->input('orderData');
         ksort($inputData);
         $query = "";
         $i = 0;
@@ -59,9 +59,8 @@ class PaymentController extends Controller
             $vnpSecureHash =   hash_hmac('sha512', $hashData, $vnp_HashSecret);
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
-        // dd($orderData);
-        // Trả về response chứa redirect_url và orderData
-        return response()->json(['redirect_url' => $vnp_Url, ]);
+
+        return response()->json(['redirect_url' => $vnp_Url,  $orderData]);
     }
 
     public function handleReturn(Request $request)

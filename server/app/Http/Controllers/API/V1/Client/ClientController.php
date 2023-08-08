@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\MovieResource;
 use App\Http\Resources\ScreeningResource;
 use App\Models\Movie;
+use App\Models\order;
 use App\Models\Screenings;
 
 use Illuminate\Http\Request;
@@ -31,11 +32,21 @@ class ClientController extends Controller
             ->where('cinemas.name', 'Hồ Chí Minh')
             ->where('movies.status', 1)
             ->get();
-            // dd($screenings);
+        // dd($screenings);
         return response()->json([
             'status' => true,
             'message' => 'Get list show time success',
             'data' => ScreeningResource::collection($screenings)
         ], Response::HTTP_OK);
+    }
+    public function getShowTimeBooking($screeningId)
+    {
+        $screeningWithOrders = Screenings::with('order')->find($screeningId);
+
+        if (!$screeningWithOrders) {
+            return response()->json(['error' => 'Screening not found'], 404);
+        }
+
+        return response()->json(['data' => $screeningWithOrders, 200]);
     }
 }

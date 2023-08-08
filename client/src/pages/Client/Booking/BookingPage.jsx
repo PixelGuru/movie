@@ -31,7 +31,7 @@ const BookingPage = () => {
   const [rows, setRows] = useState("");
   const [columns, setColumns] = useState(10);
   const [timeShow, setTimeShow] = useState([]);
-  const [countdown, setCountdown] = useState(900000);
+  const [countdown, setCountdown] = useState(600);
   const { user, movieInfo, setMovieInfo } = useStateContext();
   const navigate = useNavigate();
   const [ticketPrice, setTicketPrice] = useState(0);
@@ -39,6 +39,8 @@ const BookingPage = () => {
   const [cinema, setCinema] = useState("");
   const [orderData, setOrderData] = useState();
 
+  const [disabledSeats, setDisabledSeats] = useState([]);
+  const [disabledSeatsMap, setDisabledSeatsMap] = useState({});
   // console.log(user)
   useEffect(() => {
     if (!token) {
@@ -100,6 +102,21 @@ const BookingPage = () => {
       });
   }, [screeningId]);
 
+  useEffect(() => {
+    axios
+      .get(`http://127.0.0.1:8000/api/order?screening_id=${screeningId}`)
+      .then((response) => {
+        const orderDataList = response.data.data;
+        const disabledSeatsList = [];
+        const newDisabledSeatsMap = {};
+        orderDataList.forEach((orderData) => {
+          const orderSelectedSeats = orderData.selected_seats.split(",");
+          newDisabledSeatsMap[orderData.screening_id] = orderSelectedSeats;
+        });
+        setDisabledSeatsMap(newDisabledSeatsMap);
+      });
+  }, []);
+
   const handleSeatClick = (seat) => {
     if (selectedSeats.length >= 6) {
       return message.warning("Chỉ được chọn tối đa 6 ghế");
@@ -119,34 +136,39 @@ const BookingPage = () => {
   useEffect(() => {
     const total = calculateTotalPrice();
     setTotalPrice(total);
-    const selectedSeatsString = selectedSeats.join(",");
-    const orderData = {
-      user_id: user.id,
-      user_name: user.name,
-      user_email: user.email,
-      user_phone: user.phone,
-      cinema_name: cinema,
-      movie_name: movieInfo.name,
-      screening_id: parseInt(screeningId),
-      total_price: totalPrice,
-      selected_seats: selectedSeatsString,
-    };
-    setOrderData(orderData);
-    console.log(orderData);
   }, [selectedSeats, totalPrice]);
-  sessionStorage.setItem("orderData", JSON.stringify(orderData));
+
   const onBooking = async () => {
     try {
       const response = await axios.post(
         "http://127.0.0.1:8000/api/create-payment",
         { totalPrice }
       );
-      console.log(response);
+      const selectedSeatsString = selectedSeats.join(",");
+      const orderData = {
+        user_id: user.id,
+        user_name: user.name,
+        user_email: user.email,
+        user_phone: user.phone,
+        cinema_name: cinema,
+        movie_name: movieInfo.name,
+        screening_id: parseInt(screeningId),
+        total_price: totalPrice,
+        selected_seats: selectedSeatsString,
+      };
+      setOrderData(orderData);
+      sessionStorage.setItem("orderData", JSON.stringify(orderData));
       window.location.href = response.data.redirect_url;
     } catch (error) {
       message.error("Đã có lỗi xảy tra trong quá trình thanh toán");
     }
   };
+  useEffect(() => {
+    const alreadySession = sessionStorage.getItem("orderData");
+    if (alreadySession) {
+      sessionStorage.removeItem("orderData");
+    }
+  });
 
   return (
     <AreaBooking>
@@ -185,7 +207,8 @@ const BookingPage = () => {
                 const isSeatAvailable = seats.includes(seat);
                 const isRegularSeat = rowIndex === 0 || rowIndex === 1;
                 const isSeatDisabled =
-                  !isSeatAvailable && !isSeatSelected && remainingSeats === 0;
+                  !isSeatAvailable ||
+                  disabledSeatsMap[screeningId]?.includes(seat);
 
                 if (isRegularSeat) {
                   return (
@@ -292,17 +315,20 @@ const BookingPage = () => {
       <div
         style={{
           color: "#fff",
+          width: "25%",
         }}
       >
         <div>
           <h2>Thời gian giữ ghế: {formatTime(countdown)}</h2>
-          <h1 style={{ margin: "150px 0 20px" }}>Tổng giá: {totalPrice} VNĐ</h1>
+          <h1 style={{ margin: "150px 0 20px" }}>
+            Tổng tiền: {totalPrice.toLocaleString("vi-VN")} VNĐ
+          </h1>
           <Space size={20}>
             <BookingButton
               onClick={onBooking}
               disabled={selectedSeats.length === 0}
             >
-              Đặt vé
+              Thanh toán và dặt vé
             </BookingButton>
             <Link
               style={{ color: "#fff", textDecoration: "none" }}
