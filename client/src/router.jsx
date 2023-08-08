@@ -15,7 +15,8 @@ import ShowTimeHoChiMinh from "./pages/Client/ShowTimePage/HCM/ShowTimeHoChiMinh
 import ShowTimeDaNang from "./pages/Client/ShowTimePage/DN/DN";
 import Login from "./pages/Admin/Login/Login";
 import BookingPage from "./pages/Client/Booking/BookingPage";
-
+import PaymentSuccess from "./pages/Client/PaymentResult/PaymentSuccess";
+import PaymentFault from "./pages/Client/PaymentResult/PaymentFault";
 
 const router = createBrowserRouter([
   {
@@ -49,9 +50,16 @@ const router = createBrowserRouter([
 
       {
         path: "/booking/:movie_id/:screeningId",
-        element: <BookingPage />, // Thêm route cho BookingPage
+        element: <BookingPage />,
       },
-     
+      {
+        path: "/payment-return-success",
+        element: <PaymentSuccess />,
+      },
+      {
+        path: "/payment-return-fault",
+        element: <PaymentFault />,
+      },
     ],
   },
   {

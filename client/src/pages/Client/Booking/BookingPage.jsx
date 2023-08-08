@@ -1,8 +1,14 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  useNavigate,
+  useNavigation,
+  useParams,
+} from "react-router-dom";
 import axios from "axios";
-import { Radio, Space, message } from "antd";
+import { Space, message } from "antd";
 import {
   SeatContainer,
   RegularSeatButton,
@@ -30,7 +36,10 @@ const BookingPage = () => {
   const navigate = useNavigate();
   const [ticketPrice, setTicketPrice] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [cinema, setCinema] = useState("");
+  const [orderData, setOrderData] = useState();
 
+  // console.log(user)
   useEffect(() => {
     if (!token) {
       navigate("/login");
@@ -59,11 +68,10 @@ const BookingPage = () => {
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds < 10 ? "0" : ""}${remainingSeconds}`;
   };
-
   useEffect(() => {
     axios.get(`http://127.0.0.1:8000/api/movies/${movie_id}`).then((res) => {
       setMovieInfo(res.data.data);
-      console.log(movieInfo);
+      // console.log(movieInfo);
     });
   }, []);
 
@@ -72,9 +80,8 @@ const BookingPage = () => {
       .get(`http://127.0.0.1:8000/api/screenings/${screeningId}`)
       .then((response) => {
         const data = response.data;
-        console.log(data);
-
         const totalSeats = data.data.total_seat;
+        setCinema(data.data.cinema_name);
         setRemainingSeats(data.data.remaining_seats);
         setTimeShow(data.data.start_time);
         setTicketPrice(data.data.price);
@@ -103,17 +110,6 @@ const BookingPage = () => {
       setSelectedSeats((prevSeats) => [...prevSeats, seat]);
     }
   };
-  const onBooking = async () => {
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/create-payment",
-        { totalPrice }
-      );
-      window.location.href = response.data.redirect_url;
-    } catch (error) {
-      message.error("Đã có lỗi xảy tra trong quá trình thanh toán");
-    }
-  };
   const calculateTotalPrice = () => {
     const numberOfSeats = selectedSeats.length;
     const total = ticketPrice * numberOfSeats; // Sử dụng giá vé từ API để tính tổng giá
@@ -123,7 +119,35 @@ const BookingPage = () => {
   useEffect(() => {
     const total = calculateTotalPrice();
     setTotalPrice(total);
-  }, [selectedSeats, ticketPrice]);
+    const selectedSeatsString = selectedSeats.join(",");
+    const orderData = {
+      user_id: user.id,
+      user_name: user.name,
+      user_email: user.email,
+      user_phone: user.phone,
+      cinema_name: cinema,
+      movie_name: movieInfo.name,
+      screening_id: parseInt(screeningId),
+      total_price: totalPrice,
+      selected_seats: selectedSeatsString,
+    };
+    setOrderData(orderData);
+    console.log(orderData);
+  }, [selectedSeats, totalPrice]);
+  sessionStorage.setItem("orderData", JSON.stringify(orderData));
+  const onBooking = async () => {
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/create-payment",
+        { totalPrice }
+      );
+      console.log(response);
+      window.location.href = response.data.redirect_url;
+    } catch (error) {
+      message.error("Đã có lỗi xảy tra trong quá trình thanh toán");
+    }
+  };
+
   return (
     <AreaBooking>
       <div

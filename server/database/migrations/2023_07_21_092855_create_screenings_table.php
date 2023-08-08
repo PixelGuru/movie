@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('room');
             $table->integer('total_seat');
             $table->integer('remaining_seats');
+            $table->string('selected_seats')->nullable();
             $table->timestamps();
 
             $table->foreign('movie_id')->references('id')->on('movies')->onDelete('cascade');

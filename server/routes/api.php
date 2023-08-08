@@ -4,6 +4,7 @@ use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\PaymentController;
 use App\Http\Controllers\API\V1\Admin\ListUser;
 use App\Http\Controllers\API\V1\Admin\MovieController;
+use App\Http\Controllers\API\V1\Admin\OrderController;
 use App\Http\Controllers\API\V1\Admin\ScreeningController;
 use App\Http\Controllers\API\V1\Admin\SeatController;
 use App\Http\Controllers\API\V1\Admin\TicketController;
@@ -28,7 +29,7 @@ Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/login', [AuthController::class, 'login']);
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::get('/profile', function(Request $request) { 
+    Route::get('/profile', function (Request $request) {
         return auth()->user();
     });
 });
@@ -47,6 +48,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 Route::resource('listUser', ListUser::class);
 Route::resource('movies', MovieController::class);
 Route::resource('screenings', ScreeningController::class);
+Route::resource('order', OrderController::class);
 
 // Route::get('/screenings/{id}', [ScreeningController::class, 'show']);
 Route::get('/screenings/{id}/seats', [SeatController::class, 'index']);
@@ -54,9 +56,8 @@ Route::post('/screenings/{id}/book', [SeatController::class, 'book']);
 Route::post('/bookings', [TicketController::class, 'Booking']);
 
 Route::post('/create-payment', [PaymentController::class, 'createPayment'])->name('payment.create');
-Route::get('/payment/return', [PaymentController::class, 'handleReturn'])->name('payment.return');
+Route::get('/payment-return', [PaymentController::class, 'handleReturn'])->name('payment.return');
 
 
 Route::get('/movie/show', [ClientController::class, 'showMovie']);
 Route::get('/show-time/ho-chi-minh', [ClientController::class, 'showTimeHoChiMinh']);
-

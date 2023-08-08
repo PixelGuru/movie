@@ -1,9 +1,8 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useEffect, useState } from "react";
 
-const StateContext = createContext({
-
-});
+const StateContext = createContext({});
 
 export const ContextProvider = ({ children }) => {
   const [user, setUser] = useState(
@@ -28,9 +27,18 @@ export const ContextProvider = ({ children }) => {
     localStorage.setItem("token", token);
   }, [token]);
 
+
   return (
     <StateContext.Provider
-      value={{ user, setUser, token, setToken, movieInfo, setMovieInfo }}
+      value={{
+        user,
+        setUser,
+        token,
+        setToken,
+        movieInfo,
+        setMovieInfo,
+        
+      }}
     >
       {children}
     </StateContext.Provider>

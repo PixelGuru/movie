@@ -16,9 +16,7 @@ const ShowTimeHoChiMinh = () => {
       const response = await fetch(
         "http://127.0.0.1:8000/api/show-time/ho-chi-minh"
       );
-
       const data = await response.json();
-      console.log(data);
       const movieMap = data.data.reduce((acc, movie) => {
         if (!acc[movie.movie_name]) {
           acc[movie.movie_name] = [];
