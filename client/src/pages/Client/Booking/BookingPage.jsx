@@ -1,19 +1,13 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
-import {
-  Link,
-  Navigate,
-  useNavigate,
-  useNavigation,
-  useParams,
-} from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Space, message } from "antd";
 import {
   SeatContainer,
   RegularSeatButton,
   VipSeatButton,
-  EmptySeatButton,
   BookingButton,
   Screen,
   AreaBooking,
@@ -38,7 +32,7 @@ const BookingPage = () => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [cinema, setCinema] = useState("");
   const [orderData, setOrderData] = useState();
-
+  const [disabledSeatsData, setDisabledSeatsData] = useState({});
   const [disabledSeats, setDisabledSeats] = useState([]);
   const [disabledSeatsMap, setDisabledSeatsMap] = useState({});
   // console.log(user)
@@ -81,6 +75,7 @@ const BookingPage = () => {
     axios
       .get(`http://127.0.0.1:8000/api/screenings/${screeningId}`)
       .then((response) => {
+        console.log(response.data);
         const data = response.data;
         const totalSeats = data.data.total_seat;
         setCinema(data.data.cinema_name);
@@ -104,16 +99,23 @@ const BookingPage = () => {
 
   useEffect(() => {
     axios
-      .get(`http://127.0.0.1:8000/api/order?screening_id=${screeningId}`)
+      .get(
+        `http://127.0.0.1:8000/api/order/success?screening_id=${screeningId}`
+      )
       .then((response) => {
         const orderDataList = response.data.data;
-        const disabledSeatsList = [];
-        const newDisabledSeatsMap = {};
+        const newDisabledSeatsMap = { ...disabledSeatsMap };
         orderDataList.forEach((orderData) => {
           const orderSelectedSeats = orderData.selected_seats.split(",");
-          newDisabledSeatsMap[orderData.screening_id] = orderSelectedSeats;
+          if (!newDisabledSeatsMap[orderData.screening_id]) {
+            newDisabledSeatsMap[orderData.screening_id] = []; // Khởi tạo mảng trống nếu chưa có
+          }
+          newDisabledSeatsMap[orderData.screening_id].push(
+            ...orderSelectedSeats
+          );
         });
         setDisabledSeatsMap(newDisabledSeatsMap);
+        // console.log(disabledSeatsMap);
       });
   }, []);
 
@@ -129,7 +131,7 @@ const BookingPage = () => {
   };
   const calculateTotalPrice = () => {
     const numberOfSeats = selectedSeats.length;
-    const total = ticketPrice * numberOfSeats; // Sử dụng giá vé từ API để tính tổng giá
+    const total = ticketPrice * numberOfSeats;
     return total;
   };
 
@@ -140,10 +142,6 @@ const BookingPage = () => {
 
   const onBooking = async () => {
     try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/api/create-payment",
-        { totalPrice }
-      );
       const selectedSeatsString = selectedSeats.join(",");
       const orderData = {
         user_id: user.id,
@@ -157,18 +155,17 @@ const BookingPage = () => {
         selected_seats: selectedSeatsString,
       };
       setOrderData(orderData);
-      sessionStorage.setItem("orderData", JSON.stringify(orderData));
+
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/create-payment",
+        { totalPrice, orderData }
+      );
+      console.log(response);
       window.location.href = response.data.redirect_url;
     } catch (error) {
       message.error("Đã có lỗi xảy tra trong quá trình thanh toán");
     }
   };
-  useEffect(() => {
-    const alreadySession = sessionStorage.getItem("orderData");
-    if (alreadySession) {
-      sessionStorage.removeItem("orderData");
-    }
-  });
 
   return (
     <AreaBooking>
@@ -208,6 +205,7 @@ const BookingPage = () => {
                 const isRegularSeat = rowIndex === 0 || rowIndex === 1;
                 const isSeatDisabled =
                   !isSeatAvailable ||
+                  !isSeatAvailable ||
                   disabledSeatsMap[screeningId]?.includes(seat);
 
                 if (isRegularSeat) {
@@ -233,9 +231,6 @@ const BookingPage = () => {
                     </VipSeatButton>
                   );
                 }
-                // else {
-                //   return <EmptySeatButton key={colIndex} disabled />;
-                // }
               })
           )}
         </SeatContainer>

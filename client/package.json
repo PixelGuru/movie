@@ -17,6 +17,7 @@
     "@rpldy/uploady": "^1.4.1",
     "antd": "^5.7.3",
     "axios": "^1.4.0",
+    "date-fns": "^2.30.0",
     "dayjs": "^1.11.9",
     "moment": "^2.29.4",
     "query-string": "^8.1.0",

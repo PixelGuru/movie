@@ -1,68 +1,100 @@
-import { Result } from "antd";
+import { Result, Space, Spin } from "antd"; 
 import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { Container, Content, LinkToHome } from "./styled";
+import { useStateContext } from "../../../Contexts/ContextProvider";
 
 const PaymentSuccess = () => {
-  const [formDataOrder, setFormDataOrder] = useState(null);
-  const [dataSent, setDataSent] = useState(false);
-console.log(formDataOrder)
-  const sendFormData = useCallback(() => {
-    if (formDataOrder) {
-      axios
-        .post("http://127.0.0.1:8000/api/order", formDataOrder)
-        .then((response) => {
-          console.log("Đã gửi dữ liệu thành công:", response.data);
-          setDataSent(true);
-          sessionStorage.removeItem("orderData");
-        })
-        .catch((error) => {
-          console.error("Lỗi khi gửi dữ liệu:", error);
-        });
+  const { order_id } = useParams();
+  const [orderData, setOrderData] = useState({});
+  const { user } = useStateContext();
+  const [isLoading, setIsLoading] = useState(true); 
+
+  const fetchOrderData = async () => {
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:8000/api/order/success/${order_id}`
+      );
+      setOrderData(response.data.data[0]);
+    } catch (error) {
+      console.error("Error fetching order data:", error);
+    } finally {
+      setIsLoading(false); 
     }
-  }, [formDataOrder]);
+  };
 
   useEffect(() => {
-    const storedOrderData = sessionStorage.getItem("orderData");
-    if (storedOrderData) {
-      const parsedOrderData = JSON.parse(storedOrderData);
-      setFormDataOrder(parsedOrderData);
-    }
-  }, []);
+    fetchOrderData();
+  }, [order_id]);
 
-  useEffect(() => {
-    if (!dataSent) {
-      sendFormData();
-    }
-  }, [dataSent, sendFormData]);
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+      currencyDisplay: "code",
+    }).format(value);
+  };
 
   return (
-    <div
-      style={{
-        color: "#000",
-        width: "50%",
-        background: "#fff",
-        margin: "0 auto",
-        textAlign: "center",
-      }}
-    >
-      {formDataOrder ? (
-        <Result status="success" title="Đặt vé thành công!">
-          <div>
-            <p>Người đặt: {formDataOrder.user_name}</p>
-            <p>Email: {formDataOrder.user_email} </p>
-            <p>Rạp: {formDataOrder.cinema_name}</p>
-            <p>Phim: {formDataOrder.movie_name}</p>
-            <p>Ghế đặt: {formDataOrder.selected_seats}</p>
-            <p>Tổng tiền: {formDataOrder.total_price} VNĐ</p>
-          </div>
-        </Result>
+    <Container>
+      {isLoading ? (  
+        <Spin size="large" />
       ) : (
-        <Result status="warning">
-          <Link to="/">Trang chủ</Link>
-        </Result>
+        orderData && orderData.user_id === user.id ? (
+          <Result status="success" title="Đặt vé thành công!">
+            <Content>
+              <Space size={8}>
+                <b>Mã vé:</b> {orderData.order_id}
+              </Space>
+              <Space size={8}>
+                <b>Ngày đặt</b> {orderData.created_at}
+              </Space>
+              <Space size={8}>
+                <b>Người đặt:</b> {orderData.user_name}
+              </Space>
+              <Space size={8}>
+                <b>Email: </b>
+                {orderData.user_email}
+              </Space>
+              <Space size={8}>
+                <b>Số điện thoại: </b>
+                {orderData.user_phone}
+              </Space>
+              <Space size={8}>
+                <b>Rạp: </b>
+                {orderData.cinema_name}
+              </Space>
+              <Space size={8}>
+                <b>Phim: </b>
+                {orderData.movie_name}
+              </Space>
+              <Space size={8}>
+                <b>Ghế đặt: </b>
+                {orderData.selected_seats}
+              </Space>
+              <br />
+              <Space size={8}>
+                <b>Tổng tiền: </b>
+                {formatCurrency(parseFloat(orderData.total_price))}
+              </Space>
+              <div
+                style={{
+                  marginTop: "50px",
+                  textAlign: "center",
+                }}
+              >
+                <LinkToHome to="/">Trang chủ</LinkToHome>
+              </div>
+            </Content>
+          </Result>
+        ) : (
+          <Result status="error" title="Không tìm thấy thông tin vé!">
+            <LinkToHome to="/">Trang chủ</LinkToHome>
+          </Result>
+        )
       )}
-    </div>
+    </Container>
   );
 };
 

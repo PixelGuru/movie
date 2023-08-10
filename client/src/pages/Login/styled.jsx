@@ -1,5 +1,5 @@
 import { styled } from "styled-components";
-import BGLogin from "../../../assets/Auth.jpg";
+import BGLogin from "../../assets/Auth.jpg";
 import { Form } from "antd";
 
 export const Layout = styled.div`

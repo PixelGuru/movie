@@ -19,7 +19,8 @@ class order extends Model
         'cinema_name',
         'movie_name',
         'total_price',
-        'selected_seats'
+        'selected_seats',
+        'status'
     ];
 
     public function user()

@@ -11,7 +11,29 @@ use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
-    public function index()
+    public function getOrderSuccess()
+    {
+        $orders = order::where('status', 'Success')->get();
+        return response()->json([
+            'status' => true,
+            'message' => 'Get list order success',
+            'data' => OrderResource::collection($orders)
+        ], Response::HTTP_OK);
+    }
+
+    public function getDetailOrderSuccess($order_id)
+    {
+        $orders = order::where('status', 'Success')
+            ->where('order_id', $order_id)
+            ->get();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Get detail order success',
+            'data' => OrderResource::collection($orders)
+        ], Response::HTTP_OK);
+    }
+    public function getAllOrder()
     {
         $orders = Order::all();
         return response()->json([
@@ -19,58 +41,16 @@ class OrderController extends Controller
             'data' => OrderResource::collection($orders)
         ], Response::HTTP_OK);
     }
-    public function show($id)
+
+    public function getOrderForUser($user_id)
     {
-        $order = order::find($id);
-        if (!$order) {
-            return response()->json(
-                [
-                    'status' => false,
-                    'message' => 'Movie not found'
-                ],
-                Response::HTTP_NOT_FOUND
-            );
-        }
+        $orders = order::where('user_id', $user_id)
+            ->where('status', 'Success')
+            ->get();
         return response()->json([
             'status' => true,
-            'data' => new OrderResource($order)
+            'message' => 'Get detail order success',
+            'data' => OrderResource::collection($orders)
         ], Response::HTTP_OK);
-    }
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required|exists:users,id',
-            'total_price' => 'required|numeric|min:0',
-            'user_name' => 'required|string|max:255',
-            'user_email' => 'required|email|max:255',
-            'user_phone' => 'nullable|string|max:20',
-            'movie_name' => 'required|string|max:255',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        $order_id = date('YmdHis') . substr(microtime(), 2, 3);
-
-        $order = Order::create([
-            'order_id' =>  $order_id,
-            'user_id' => $request->user_id,
-            'user_name' => $request->user_name,
-            'user_email' => $request->user_email,
-            'user_phone' => $request->user_phone,
-            'screening_id' => $request->screening_id,
-            'cinema_name' => $request->cinema_name,
-            'movie_name' => $request->movie_name,
-            'selected_seats' => $request->selected_seats,
-            'total_price' => $request->total_price,
-
-        ]);
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Order created successfully',
-            'data' => new OrderResource($order)
-        ]);
     }
 }

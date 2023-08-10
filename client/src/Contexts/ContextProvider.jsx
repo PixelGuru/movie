@@ -6,19 +6,11 @@ const StateContext = createContext({});
 
 export const ContextProvider = ({ children }) => {
   const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("user")) || {}
+    JSON.parse(localStorage.getItem("user")) || null
   );
-  useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(user));
-  }, [user]);
-
   const [movieInfo, setMovieInfo] = useState(
-    JSON.parse(localStorage.getItem("movie_info")) || {}
+    JSON.parse(localStorage.getItem("movieInfo")) || {}
   );
-  useEffect(() => {
-    localStorage.setItem("movieInfo", JSON.stringify(movieInfo));
-  }, [movieInfo]);
-
   const [token, setToken] = useState(() => {
     const storedToken = localStorage.getItem("token");
     return storedToken !== null ? storedToken : "";
@@ -26,6 +18,15 @@ export const ContextProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem("token", token);
   }, [token]);
+  
+  useEffect(() => {
+    localStorage.setItem("user", JSON.stringify(user));
+  }, [user]);
+
+  useEffect(() => {
+    localStorage.setItem("movieInfo", JSON.stringify(movieInfo));
+  }, [movieInfo]);
+
 
 
   return (
@@ -37,7 +38,6 @@ export const ContextProvider = ({ children }) => {
         setToken,
         movieInfo,
         setMovieInfo,
-        
       }}
     >
       {children}

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from "react";
-import { Navigate, Outlet, Link } from "react-router-dom";
+import { Navigate, Outlet, Link, useNavigate } from "react-router-dom";
 import { useStateContext } from "../../Contexts/ContextProvider";
 import { Button, Layout, Menu, theme } from "antd";
 import {
@@ -12,24 +12,28 @@ import {
   UserOutlined,
   BookOutlined,
   VideoCameraOutlined,
+  LogoutOutlined,
+  BorderlessTableOutlined,
+  SnippetsOutlined,
 } from "@ant-design/icons";
 import logo from "../../assets/logo.png";
 const { Header, Sider, Content } = Layout;
 
 const PrivateLayout = () => {
+  const { user, token } = useStateContext();
+  const navigate = useNavigate();
+  if (!token || user.role !== "Admin") {
+    return <Navigate to="/" />;
+  }
   const [selectedKey, setSelectedKey] = useState(() => {
     const storedKey = localStorage.getItem("selectedKey");
     return storedKey || "1";
   });
+
   useEffect(() => {
     localStorage.setItem("selectedKey", selectedKey);
   }, [selectedKey]);
 
-  const { user, token } = useStateContext();
-
-  if (!token) {
-    return <Navigate to="/admin" />;
-  }
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer },
@@ -48,11 +52,11 @@ const PrivateLayout = () => {
           selectedKeys={[selectedKey]}
           onSelect={(item) => setSelectedKey(item.key)}
           items={[
-            {
-              key: "1",
-              icon: <DashboardOutlined />,
-              label: <Link to="/admin/dashboard">Dashboard</Link>,
-            },
+            // {
+            //   key: "1",
+            //   icon: <DashboardOutlined />,
+            //   label: <Link to="/admin/dashboard">Dashboard</Link>,
+            // },
             {
               key: "2",
               icon: <UserOutlined />,
@@ -68,11 +72,10 @@ const PrivateLayout = () => {
               icon: <VideoCameraOutlined />,
               label: <Link to="admin/screenings">Screenings</Link>,
             },
-           
             {
-              key: "6",
-              icon: <BookOutlined />,
-              label: <Link to="admin/news">News</Link>,
+              key: "5",
+              icon: <SnippetsOutlined />,
+              label: <Link to="admin/orders">Order</Link>,
             },
           ]}
         />
@@ -95,6 +98,22 @@ const PrivateLayout = () => {
               height: 64,
             }}
           />
+          <div
+            style={{
+              width: "95%",
+              textAlign: "end",
+            }}
+          >
+            <Button
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate("/login");
+              }}
+            >
+              <LogoutOutlined />
+              Log out
+            </Button>
+          </div>
         </Header>
         <Content
           style={{

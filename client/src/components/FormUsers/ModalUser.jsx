@@ -8,7 +8,7 @@ const ModalUser = ({ open, setOpen, formData, onSubmit, setFormData }) => {
   const [form] = Form.useForm();
   useEffect(() => {
     if (!open) {
-      form.resetFields();
+     
       setFormData("");
     }
   }, [open]);

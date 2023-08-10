@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('movie_name');
             $table->string('selected_seats');
             $table->decimal('total_price', 10, 2);
+            $table->string('status')->default('Pending');
             $table->timestamps();
 
 

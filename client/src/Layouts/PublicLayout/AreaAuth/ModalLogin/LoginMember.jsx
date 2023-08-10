@@ -5,26 +5,24 @@ import { Button, Form, Input, message } from "antd";
 import axios from "axios";
 import { useStateContext } from "../../../../Contexts/ContextProvider";
 const LoginMember = ({ setOpen }) => {
-  const { setUser, setToken } = useStateContext();
+  const { user, setUser, setToken } = useStateContext();
   const [form] = Form.useForm();
   const onFinish = (values) => {
     console.log("Received values of form: ", values);
   };
   const onLoginMember = async () => {
-    console.log(123);
     try {
       const values = await form.validateFields();
       const response = await axios.post(
         "http://127.0.0.1:8000/api/login",
         values
       );
-
       if (response.data) {
         const userData = response.data.data;
         const token = response.data.access_token;
         localStorage.setItem("token", token);
-        setUser(userData);
         setToken(token);
+        setUser(userData)
       }
 
       window.location.reload();

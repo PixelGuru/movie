@@ -25,10 +25,15 @@ export const StyleButtonChoseTime = styled(Button)`
   color: #fff;
   background: #f37520;
   border: none;
-  transition: 0.5s;
+  transition: 0.3s;
+
   &:hover {
     background-color: #e00d7a;
     color: #fff !important;
     border-color: #fff !important ;
+  }
+  &:disabled {
+    background-color: gray; /* Thay đổi màu nền thành xám */
+    color: #fff !important;
   }
 `;

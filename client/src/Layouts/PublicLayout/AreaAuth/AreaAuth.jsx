@@ -1,16 +1,13 @@
 import ModalLogin from "../AreaAuth/ModalLogin/ModalLogin";
 import ModalRegister from "../AreaAuth/ModalRegister/ModalRegister";
 import { StyleButton } from "./styled";
-
-import { useState } from "react";
+import {  useState } from "react";
 import ModelInfoUser from "./ModelInfoUser";
 
 const AreaAuth = () => {
   const token = localStorage.getItem("token");
-
   const [open, setOpen] = useState(false);
   const onLogout = (e) => {
-    console.log(123);
     e.preventDefault();
 
     localStorage.removeItem("token");
