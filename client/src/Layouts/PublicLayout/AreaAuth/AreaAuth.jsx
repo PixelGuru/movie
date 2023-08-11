@@ -1,10 +1,12 @@
 import ModalLogin from "../AreaAuth/ModalLogin/ModalLogin";
 import ModalRegister from "../AreaAuth/ModalRegister/ModalRegister";
 import { StyleButton } from "./styled";
-import {  useState } from "react";
+import { useState } from "react";
 import ModelInfoUser from "./ModelInfoUser";
+import { useNavigate } from "react-router-dom";
 
 const AreaAuth = () => {
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const [open, setOpen] = useState(false);
   const onLogout = (e) => {
@@ -12,7 +14,7 @@ const AreaAuth = () => {
 
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.reload();
+    navigate("/");
   };
   const onClick = () => {
     setOpen(true);

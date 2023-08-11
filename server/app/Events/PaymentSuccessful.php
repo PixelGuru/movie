@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\order;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -10,17 +11,19 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class PaymentCreated
+class PaymentSuccessful
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public $orderData;
-    public function __construct($orderData)
+
+    public $order;
+
+    public function __construct($order)
     {
-        $this->orderData = $orderData;
+        $this->order = $order;
     }
 
     /**

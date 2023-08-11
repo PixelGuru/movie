@@ -40,11 +40,20 @@ const FormScreenings = () => {
       const uniqueCinemaNames = [
         ...new Set(data.map((item) => item.cinema_name)),
       ];
-      const uniqueMovieNames = [
-        ...new Set(data.map((item) => item.movie_name)),
-      ];
+
       setCinemaNames(uniqueCinemaNames);
+
+      setLoading(false);
+    });
+
+    axios.get("http://127.0.0.1:8000/api/movies").then((res) => {
+      const dataMovie = res.data.data;
+      console.log(dataMovie)
+      const uniqueMovieNames = [
+        ...new Set(dataMovie.map((item) => item.name)),
+      ];
       setMovieNames(uniqueMovieNames);
+       console.log(movieNames)
       setLoading(false);
     });
   };
@@ -88,8 +97,6 @@ const FormScreenings = () => {
       setLoading(false);
     });
   };
-
-
 
   return (
     <div>

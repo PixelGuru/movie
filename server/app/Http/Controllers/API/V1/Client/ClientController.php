@@ -31,6 +31,7 @@ class ClientController extends Controller
             ->join('movies', 'screenings.movie_id', '=', 'movies.id')
             ->where('cinemas.name', 'Hồ Chí Minh')
             ->where('movies.status', 1)
+            ->orderBy('id', 'desc')
             ->get();
         // dd($screenings);
         return response()->json([

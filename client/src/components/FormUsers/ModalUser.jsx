@@ -8,7 +8,6 @@ const ModalUser = ({ open, setOpen, formData, onSubmit, setFormData }) => {
   const [form] = Form.useForm();
   useEffect(() => {
     if (!open) {
-     
       setFormData("");
     }
   }, [open]);
@@ -87,6 +86,13 @@ const ModalUser = ({ open, setOpen, formData, onSubmit, setFormData }) => {
           ]}
         >
           <Input />
+        </Form.Item>
+        <Form.Item
+          name="password"
+          label="Password"
+          rules={[{ required: true, message: "Enter password" }, { min: 6 }]}
+        >
+          <Input.Password />
         </Form.Item>
 
         <Form.Item

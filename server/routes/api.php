@@ -9,6 +9,7 @@ use App\Http\Controllers\API\V1\Admin\ScreeningController;
 use App\Http\Controllers\API\V1\Admin\SeatController;
 use App\Http\Controllers\API\V1\Admin\TicketController;
 use App\Http\Controllers\API\V1\Client\ClientController;
+use App\Http\Controllers\EmailController;
 use App\Http\Resources\ListUser as ResourcesListUser;
 use App\Models\Tickets;
 use Illuminate\Http\Request;
@@ -67,3 +68,7 @@ Route::get('/order/{user_id}', [OrderController::class, 'getOrderForUser']);
 Route::get('/movie/show', [ClientController::class, 'showMovie']);
 Route::get('/show-time/ho-chi-minh', [ClientController::class, 'showTimeHoChiMinh']);
 Route::get('/show-time/ho-chi-minh/booking/{screeningId}', [ClientController::class, 'getShowTimeBooking']);
+
+
+
+

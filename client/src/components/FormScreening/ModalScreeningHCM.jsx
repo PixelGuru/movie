@@ -139,13 +139,13 @@ const ModalScreeningHCM = ({
           <Input />
         </Form.Item>
 
-        <Form.Item
+        {/* <Form.Item
           name="remaining_seats"
           label="Remaining Seats"
           rules={[{ required: true, message: "Enter remaining seats" }]}
         >
           <Input />
-        </Form.Item>
+        </Form.Item> */}
       </Form>
     </Modal>
   );

@@ -17,7 +17,6 @@ const DEFAULT_USER = {
 };
 const FormUser = () => {
   const [formData, setFormData] = useState(DEFAULT_USER);
-  // const [keyword, setKeyword] = useState("");
   const [dataSource, setDataSource] = useState([]);
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);

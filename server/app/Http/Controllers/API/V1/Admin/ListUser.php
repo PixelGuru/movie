@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\API\V1\Admin;
 
+use App\Events\PaymentSuccessful;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Http\Resources\ListUser as ResourcesListUser;
+use App\Mail\PaymentConfirmation;
 use App\Models\ListUser as ModelsListUser;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -15,13 +17,13 @@ class ListUser extends Controller
 {
     public function index()
     {
+
         $listUser = ModelsListUser::all();
         return response()->json(
             ResourcesListUser::collection($listUser),
             Response::HTTP_OK
         );
     }
-
     public function store(Request $request)
     {
         try {
@@ -46,7 +48,7 @@ class ListUser extends Controller
             } elseif ($request->role === 'Nhân viên') {
                 $role = 1;
             } else {
-                $role = 2;
+                $role = 0;
             }
             $formattedBirthday = Carbon::createFromFormat('d/m/Y', $request->birthday)->format('Y-m-d');
             $listUser = ModelsListUser::create([
@@ -79,6 +81,9 @@ class ListUser extends Controller
 
     public function show(string $id)
     {
+        $order = 123;
+        event(new PaymentConfirmation($order));
+
         $listUser = ModelsListUser::find($id);
         if (!$listUser) {
             return response()->json([
@@ -94,6 +99,8 @@ class ListUser extends Controller
 
     public function update(Request $request, string $id)
     {
+        $order = 123;
+        event(new PaymentConfirmation($order));
         try {
             $listUser = ModelsListUser::find($id);
             if (!$listUser) {

@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\API;
 
-
+use App\Events\PaymentSuccessful as EventsPaymentSuccessful;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
+use App\Mail\PaymentConfirmation;
 use App\Models\order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
@@ -82,14 +85,25 @@ class PaymentController extends Controller
     public function handleReturn(Request $request)
     {
         $order_id = $request->vnp_TxnRef;
+       
         $order = DB::table('order')->where('order_id', $order_id)->first();
+
         if ($order && $request->vnp_ResponseCode === '00') {
+            $this->sendEmail($order);
             DB::table('order')
                 ->where('order_id', $order_id)
                 ->update(['status' => 'Success']);
-
-                return redirect('http://localhost:5173/payment-return-success/' . $order_id);
+            return redirect('http://localhost:5173/payment-return-success/' . $order_id);
+        } else {
+            return redirect('http://localhost:5173/payment-return-fault');
         }
-        return redirect('http://localhost:5173/payment-return-fault');
+    }
+    public function sendEmail($order)
+    {
+        // Gọi event để gửi email
+        // $order = 123;
+        event(new EventsPaymentSuccessful($order)); // Thay thế tham số event bằng tham số thích hợp
+
+
     }
 }

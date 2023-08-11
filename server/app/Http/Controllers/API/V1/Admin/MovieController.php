@@ -15,7 +15,7 @@ class MovieController extends Controller
 {
     public function index()
     {
-        $movie = Movie::all();
+        $movie = Movie::orderBy('id', 'desc')->get();
         return response()->json(
             [
                 'status' => true,
@@ -47,7 +47,6 @@ class MovieController extends Controller
                 $file->move(public_path('images'), $filename);
                 $fileName = $filename;
             }
-            // dd($fileName);
             if ($request->status === 'Hide') {
                 $status = 0;
             } elseif ($request->role === 'Show') {

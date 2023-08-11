@@ -39,7 +39,7 @@ class ScreeningController extends Controller
             'end_time' => 'required',
             'price' => 'required',
             'room' => 'required',
-            'remaining_seats' =>  'required',
+            // 'remaining_seats' =>  'required',
         ]);
 
         // Find or create the movie record based on the input movie_name
@@ -58,7 +58,7 @@ class ScreeningController extends Controller
             'end_time' => $request->end_time,
             'price' => $request->price,
             'room' => $request->room,
-            'remaining_seats' => $request->input('remaining_seats'),
+            // 'remaining_seats' => $request->input('remaining_seats'),
         ]);
 
         return response()->json([
@@ -110,7 +110,7 @@ class ScreeningController extends Controller
             'end_time' => 'required',
             'price' => 'required',
             'room' => 'required',
-            'remaining_seats' =>  'required',
+            // 'remaining_seats' =>  'required',
         ]);
 
 
@@ -131,7 +131,7 @@ class ScreeningController extends Controller
         $screening->end_time = $request->end_time;
         $screening->price = $request->price;
         $screening->room = $request->room;
-        $screening->remaining_seats = $request->remaining_seats;
+        // $screening->remaining_seats = $request->remaining_seats;
         $screening->save();
 
         return response()->json([
