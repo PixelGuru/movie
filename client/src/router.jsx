@@ -16,6 +16,8 @@ import PaymentSuccess from "./pages/Client/PaymentResult/PaymentSuccess";
 import PaymentFault from "./pages/Client/PaymentResult/PaymentFault";
 import Orders from "./pages/Admin/Orders/Orders";
 import Text from "./components/text";
+import ContactPage from "./pages/Client/ContactPage/ContactPage";
+import FAQPage from "./pages/Client/FAQPage/FAQPage";
 
 const router = createBrowserRouter([
   {
@@ -58,6 +60,14 @@ const router = createBrowserRouter([
       {
         path: "/payment-return-fault",
         element: <PaymentFault />,
+      },
+      {
+        path: "/FAQ",
+        element: <FAQPage />,
+      },
+      {
+        path: "/contact",
+        element: <ContactPage />,
       },
     ],
   },

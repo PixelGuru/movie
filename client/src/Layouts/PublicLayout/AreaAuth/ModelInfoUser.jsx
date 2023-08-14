@@ -38,7 +38,7 @@ const ModelInfoUser = ({ open, setOpen, userData }) => {
   };
   return (
     <>
-      <Modal open={open} onCancel={onCancel} footer={null} width={900}>
+      <Modal open={open} onCancel={onCancel} footer={null} width={1200} title='Thông tin thành viên'  >
         <div style={{ display: "flex", justifyContent: "space-between" }}>
           <div style={{ fontSize: 17 }}>
             <div>
@@ -57,14 +57,14 @@ const ModelInfoUser = ({ open, setOpen, userData }) => {
             <div>
               <b>Số điện thoại:</b> {user?.phone}
             </div>
-            <div>
+            {/* <div>
               <b>Hạng:</b> {user?.level}
-            </div>
+            </div> */}
           </div>
           <div>
             <h4>Lịch sử đặt vé</h4>
             <div
-              style={{ maxHeight: "150px", overflowY: "auto", marginTop: 10 }}
+              style={{ maxHeight: "200px", overflowY: "auto", marginTop: 10 }}
             >
               <table border={1} style={{ width: "100%", textAlign: "center" }}>
                 <thead>

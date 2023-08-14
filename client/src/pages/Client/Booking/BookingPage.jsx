@@ -37,7 +37,7 @@ const BookingPage = () => {
   const [disabledSeatsMap, setDisabledSeatsMap] = useState({});
   // console.log(user)
   useEffect(() => {
-    if (!token) {
+    if (!token && token !=='token') {
       navigate("/login");
     }
   }, []);

@@ -66,22 +66,20 @@ const PubLicLayout = () => {
                 <LinkNav to="/show-time">LỊCH CHIẾU</LinkNav>
               </Li>
               <Li>
-                <LinkNav to="">RẠP VÀ GIÁ</LinkNav>
+                <LinkNav to="">RẠP </LinkNav>
               </Li>
               <Li>
                 <LinkNav to="">KHUYẾN MÃI</LinkNav>
               </Li>
               <Li>
-                <LinkNav to="">HỎI ĐÁP</LinkNav>
+                <LinkNav to="/FAQ">HỎI ĐÁP</LinkNav>
               </Li>
               <Li>
                 <LinkNav to="">TIN TỨC</LinkNav>
               </Li>
+         
               <Li>
-                <LinkNav to="">GIỚI THIỆU</LinkNav>
-              </Li>
-              <Li>
-                <LinkNav to="">LIÊN HỆ</LinkNav>
+                <LinkNav to="/contact">LIÊN HỆ</LinkNav>
               </Li>
             </Ul>
           </Nav>

@@ -4,6 +4,7 @@ import {
   DatePicker,
   Form,
   Input,
+  InputNumber,
   Modal,
   Select,
   Space,
@@ -122,30 +123,29 @@ const ModalScreeningHCM = ({
             <TimePicker format={format} />
           </Form.Item>
         </Space>
-
-        <Form.Item
-          name="room"
-          label="Room"
-          rules={[{ required: true, message: "Enter room" }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          name="price"
-          label="Price"
-          rules={[{ required: true, message: "Enter price" }]}
-        >
-          <Input />
-        </Form.Item>
-
-        {/* <Form.Item
-          name="remaining_seats"
-          label="Remaining Seats"
-          rules={[{ required: true, message: "Enter remaining seats" }]}
-        >
-          <Input />
-        </Form.Item> */}
+        <Space size={10}>
+          <Form.Item
+            name="room"
+            label="Room"
+            rules={[{ required: true, message: "Enter room" }]}
+          >
+            <InputNumber style={{ width: 150 }} />
+          </Form.Item>
+          <Form.Item
+            name="total_seats"
+            label="Total Seats"
+            rules={[{ required: true, message: "Enter total seats" }]}
+          >
+            <InputNumber style={{ width: 150 }} />
+          </Form.Item>
+          <Form.Item
+            name="price"
+            label="Price"
+            rules={[{ required: true, message: "Enter price" }]}
+          >
+            <InputNumber style={{ width: 150 }} />
+          </Form.Item>
+        </Space>
       </Form>
     </Modal>
   );

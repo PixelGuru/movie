@@ -26,6 +26,7 @@ const LoginMember = ({ setOpen }) => {
       }
 
       window.location.reload();
+      message.success('Đăng nhập thành công')
     } catch {
       message.error("Đăng nhập không thành công!");
     }

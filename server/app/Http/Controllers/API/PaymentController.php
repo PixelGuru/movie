@@ -26,7 +26,7 @@ class PaymentController extends Controller
         $vnp_Locale = 'vn';
         $vnp_IpAddr = $_SERVER['REMOTE_ADDR'];
         $startTime = date("YmdHis");
-        $expire = date('YmdHis', strtotime('+15 minutes', strtotime($startTime)));
+        $expire = date('YmdHis', strtotime('+10 minutes', strtotime($startTime)));
         $orderData = $request->orderData;
 
         $inputData = array(

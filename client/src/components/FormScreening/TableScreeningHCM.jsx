@@ -183,12 +183,12 @@ const TableScreeningHCM = ({ dataSource, onDelete, onEdit }) => {
       ...getColumnSearchProps("price"),
     },
 
-    // {
-    //   title: "Remaining Seats",
-    //   dataIndex: "remaining_seats",
-    //   key: "remaining_seats",
-    //   ...getColumnSearchProps("remaining_seats"),
-    // },
+    {
+      title: "Total seats",
+      dataIndex: "total_seat",
+      key: "total_seats",
+      ...getColumnSearchProps("total_seats"),
+    },
     {
       width: 110,
       title: "Action",
