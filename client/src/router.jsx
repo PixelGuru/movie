@@ -18,6 +18,7 @@ import Orders from "./pages/Admin/Orders/Orders";
 import Text from "./components/text";
 import ContactPage from "./pages/Client/ContactPage/ContactPage";
 import FAQPage from "./pages/Client/FAQPage/FAQPage";
+import PromotionPage from "./pages/Client/PromotionPage/PromotionPage";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,10 @@ const router = createBrowserRouter([
       {
         path: "/show-time/da-nang",
         element: <ShowTimeDaNang />,
+      },
+      {
+        path: "/promotion",
+        element: <PromotionPage />,
       },
 
       {

@@ -69,7 +69,7 @@ const PubLicLayout = () => {
                 <LinkNav to="">RẠP </LinkNav>
               </Li>
               <Li>
-                <LinkNav to="">KHUYẾN MÃI</LinkNav>
+                <LinkNav to="/promotion">KHUYẾN MÃI</LinkNav>
               </Li>
               <Li>
                 <LinkNav to="/FAQ">HỎI ĐÁP</LinkNav>
@@ -77,7 +77,7 @@ const PubLicLayout = () => {
               <Li>
                 <LinkNav to="">TIN TỨC</LinkNav>
               </Li>
-         
+
               <Li>
                 <LinkNav to="/contact">LIÊN HỆ</LinkNav>
               </Li>
